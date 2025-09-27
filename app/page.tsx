@@ -346,7 +346,7 @@ export default function Home() {
             >
               <div className="w-full h-32 relative">
                 <Image
-                  src="/Medical_Specialties_Images/cardiology.png"
+                  src="/cardiology.png"
                   alt="Cardiology"
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-300"
