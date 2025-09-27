@@ -15,7 +15,8 @@ const nextConfig = {
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
-  output: 'standalone',
+  output: 'export',
+  trailingSlash: true,
 }
 
 module.exports = nextConfig

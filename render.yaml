@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: ecuretrip-medical-tourism
+    env: node
+    buildCommand: npm install --legacy-peer-deps && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NEXT_PUBLIC_SUPABASE_URL
+        value: https://eqjpdytmsohfpohecczz.supabase.co
+      - key: NEXT_PUBLIC_SUPABASE_ANON_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxanBkeXRtc29oZnBvaGVjY3p6Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTg4MzM1NzcsImV4cCI6MjA3NDQwOTU3N30.DDNR98O9E1rcWirNZPOuoSYjaUDSuReNcZQbZtxTjgQ
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        value: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVxanBkeXRtc29oZnBvaGVjY3p6Iiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODgzMzU3NywiZXhwIjoyMDc0NDA5NTc3fQ.OamNH7cypAFAR1I8C54IfT0unLYqnk02PgcUXyU6FfU
