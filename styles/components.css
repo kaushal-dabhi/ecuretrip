@@ -1,0 +1,253 @@
+/* eCureTrip Design System - Universal Components */
+
+/* Buttons */
+.btn {
+  border-radius: 14px;
+  padding: .75rem 1.1rem;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+
+.btn-primary:hover {
+  background: var(--primary-600);
+}
+
+.btn-primary:active {
+  background: var(--primary-700);
+}
+
+.btn-ghost {
+  background: var(--surface-2);
+  color: var(--ink);
+  border: 1px solid var(--border);
+}
+
+.btn-ghost:hover {
+  background: #eaf0ff;
+}
+
+.btn-link {
+  color: var(--link);
+  font-weight: 600;
+  background: transparent;
+  padding: 0;
+}
+
+.btn:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+/* Cards */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 20px 40px rgba(18,32,59,.12);
+}
+
+.card-header {
+  padding: 20px 24px 0;
+}
+
+.card-body {
+  padding: 16px 24px;
+}
+
+.card-footer {
+  padding: 0 24px 20px;
+}
+
+/* Inputs / Selects */
+.input, select, textarea {
+  width: 100%;
+  height: 44px;
+  padding: 10px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--body);
+  font-size: var(--text);
+  transition: all 0.2s ease;
+}
+
+.input::placeholder {
+  color: color-mix(in srgb, var(--muted) 80%, #fff 20%);
+}
+
+.input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+  border-color: var(--primary);
+}
+
+.label {
+  font-size: var(--sub);
+  color: var(--muted);
+  margin-bottom: 6px;
+  display: block;
+  font-weight: 500;
+}
+
+.help {
+  font-size: var(--cap);
+  color: var(--muted);
+  margin-top: 6px;
+}
+
+/* Pills / Chips */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--body);
+  font-size: var(--sub);
+  transition: all 0.2s ease;
+}
+
+.pill .muted {
+  color: var(--muted);
+  font-size: var(--cap);
+}
+
+.pill--on {
+  border-color: var(--primary);
+  background: #F0F4FF;
+  color: var(--ink);
+}
+
+/* Tables */
+.table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table th {
+  text-align: left;
+  font-size: var(--sub);
+  color: var(--muted);
+  padding: 12px 14px;
+  font-weight: 600;
+  border-bottom: 1px solid var(--divider);
+}
+
+.table td {
+  padding: 14px;
+  border-top: 1px solid var(--divider);
+}
+
+.table tr:hover td {
+  background: #FAFBFF;
+}
+
+/* Alerts / Banners */
+.alert {
+  border-radius: var(--radius);
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  margin-bottom: 16px;
+}
+
+.alert--success {
+  border-color: #DDF3E8;
+  background: #F3FBF7;
+  color: #0E6B43;
+}
+
+.alert--danger {
+  border-color: #F8D9D9;
+  background: #FFF5F5;
+  color: #8F1D1D;
+}
+
+.alert--warning {
+  border-color: #FEF3C7;
+  background: #FFFBEB;
+  color: #92400E;
+}
+
+.alert--info {
+  border-color: #DBEAFE;
+  background: #EFF6FF;
+  color: #1E40AF;
+}
+
+/* Hero / Banners */
+.hero {
+  position: relative;
+  background: linear-gradient(180deg, #F8FBFF 0%, #EFF4FF 100%);
+}
+
+.hero .title {
+  color: var(--ink);
+}
+
+.hero .subtitle {
+  color: var(--muted);
+}
+
+/* Search bar */
+.search-input {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--body);
+}
+
+.search-input::placeholder {
+  color: var(--muted);
+}
+
+.search-icon {
+  color: var(--muted);
+}
+
+/* Ratings */
+.rating-star {
+  color: var(--success);
+}
+
+.rating-score {
+  color: var(--body);
+  font-weight: 600;
+}
+
+.rating-count {
+  color: var(--muted);
+}
+
+/* Pricing */
+.price {
+  color: var(--price);
+  font-weight: 600;
+  font-size: 18px;
+}
+
+/* Focus styles */
+*:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}

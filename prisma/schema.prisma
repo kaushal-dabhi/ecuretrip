@@ -1,0 +1,708 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== CORE USER MANAGEMENT =====
+model User {
+  id            String         @id @default(cuid())
+  email         String         @unique
+  password      String
+  role          UserRole       @default(PATIENT)
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  firstName     String
+  lastName      String
+  phone         String?
+  avatar        String?
+  country       String?
+  city          String?
+  language      String[]       @default(["en"])
+  admin         Admin?
+  doctor        Doctor?
+  coordinator   Coordinator?
+  notifications Notification[]
+  patient       Patient?
+  auditLogs     AuditLog[]
+  sessions      UserSession[]
+
+  @@map("users")
+}
+
+model UserSession {
+  id        String   @id @default(cuid())
+  userId    String
+  sessionId String   @unique
+  ipAddress String?
+  userAgent String?
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("user_sessions")
+}
+
+// ===== EMR CORE MODELS =====
+model Patient {
+  id               String          @id @default(cuid())
+  userId           String          @unique
+  dateOfBirth      DateTime?
+  gender           String?
+  bloodGroup       String?
+  height           String?
+  weight           String?
+  address          Json?           // Store address as JSON
+  allergies        String[]
+  medicalHistory   String[]
+  currentMedications String[]
+  emergencyContact Json?           // Store emergency contact as JSON
+  insurance        Json?           // Store insurance as JSON
+  passportNumber   String?
+  visaStatus       String?
+  preferredLanguage String?
+  consultationType String[]
+  idDocument       String?         // File URL
+  insuranceCard    String?         // File URL
+  medicalRecords   MedicalRecord[]
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+  appointments     Appointment[]
+  consultations    Consultation[]
+  payments         Payment[]
+  reviews          Review[]
+  oncologyCases    OncologyCase[]
+  fhirResources    FHIRResource[]
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("patients")
+}
+
+model Doctor {
+  id              String        @id @default(cuid())
+  userId          String        @unique
+  specialty       String
+  subSpecialty    String[]
+  experience      String
+  education       Json?         // Store education as JSON
+  certifications  String[]
+  awards          String[]
+  bio             String
+  hospital        String?
+  clinic          String?
+  practiceType    String?
+  consultationFees Json?        // Store fees as JSON
+  availability    Json?         // Store availability as JSON
+  acceptedInsurance String[]
+  languages       String[]      @default(["en"])
+  medicalLicense  String?       // File URL
+  medicalDegree   String?       // File URL
+  boardCertification String?    // File URL
+  malpracticeInsurance String?  // File URL
+  additionalDocuments String[]  // File URLs
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  appointments    Appointment[]
+  consultations   Consultation[]
+  hospitalRef     Hospital?     @relation(fields: [hospitalId], references: [id])
+  hospitalId      String?
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reviews         Review[]
+  treatments      Treatment[]
+  oncologyCases   OncologyCase[]
+  capabilityProfile DoctorCapabilityProfile?
+
+  @@map("doctors")
+}
+
+model Coordinator {
+  id              String        @id @default(cuid())
+  userId          String        @unique
+  department      String
+  assignedCases   OncologyCase[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("coordinators")
+}
+
+// ===== ONCOLOGY CASE MANAGEMENT =====
+model OncologyCase {
+  id                    String              @id @default(cuid())
+  patientId             String
+  doctorId              String?
+  coordinatorId         String?
+  caseNumber            String              @unique
+  status                OncologyCaseStatus  @default(INTAKE)
+  priority              CasePriority        @default(MEDIUM)
+  tumorType             String?
+  tumorLocation         String?
+  stage                 String?
+  diagnosis             String?
+  treatmentPlan         String?
+  estimatedCost         Decimal             @db.Decimal(10, 2)
+  currency              String              @default("USD")
+  intakeDate            DateTime            @default(now())
+  targetCompletionDate  DateTime?
+  actualCompletionDate  DateTime?
+  notes                 String?
+  attachments           CaseAttachment[]
+  milestones            CaseMilestone[]
+  tumorBoardReviews     TumorBoardReview[]
+  workflows             WorkflowInstance[]
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  patient               Patient             @relation(fields: [patientId], references: [id])
+  doctor                Doctor?             @relation(fields: [doctorId], references: [id])
+  coordinator           Coordinator?        @relation(fields: [coordinatorId], references: [id])
+
+  @@map("oncology_cases")
+}
+
+model CaseAttachment {
+  id            String        @id @default(cuid())
+  caseId        String
+  type          AttachmentType
+  title         String
+  description   String?
+  fileUrl       String
+  fileType      String
+  fileSize      Int
+  uploadedBy    String
+  tags          String[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  case          OncologyCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("case_attachments")
+}
+
+model CaseMilestone {
+  id            String            @id @default(cuid())
+  caseId        String
+  title         String
+  description   String?
+  status        MilestoneStatus   @default(PENDING)
+  dueDate       DateTime?
+  completedDate DateTime?
+  amount        Decimal?          @db.Decimal(10, 2)
+  currency      String            @default("USD")
+  notes         String?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  case          OncologyCase      @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("case_milestones")
+}
+
+model TumorBoardReview {
+  id            String        @id @default(cuid())
+  caseId        String
+  reviewerId    String
+  reviewerName  String
+  reviewDate    DateTime      @default(now())
+  recommendations String?
+  approved      Boolean       @default(false)
+  notes         String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  case          OncologyCase  @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("tumor_board_reviews")
+}
+
+// ===== DOCTOR CAPABILITY PROFILES =====
+model DoctorCapabilityProfile {
+  id                    String    @id @default(cuid())
+  doctorId              String    @unique
+  tumorTypes            String[]
+  modalities            String[]
+  experienceLevel       ExperienceLevel
+  certifications        String[]
+  languages             String[]
+  availability          Json?
+  specializations       String[]
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  doctor                Doctor    @relation(fields: [doctorId], references: [id], onDelete: Cascade)
+
+  @@map("doctor_capability_profiles")
+}
+
+// ===== FHIR RESOURCES =====
+model FHIRResource {
+  id            String        @id @default(cuid())
+  resourceType  String        // Patient, Observation, Condition, etc.
+  resourceId    String        // FHIR resource ID
+  patientId     String
+  data          Json          // Full FHIR resource data
+  version       Int           @default(1)
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  patient       Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+
+  @@map("fhir_resources")
+}
+
+// ===== PACS/DICOM INTEGRATION =====
+model DICOMStudy {
+  id            String        @id @default(cuid())
+  studyInstanceUID String     @unique
+  patientId    String
+  studyDate    DateTime
+  studyDescription String?
+  modality      String
+  bodyPart     String?
+  images        DICOMImage[]
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("dicom_studies")
+}
+
+model DICOMImage {
+  id            String        @id @default(cuid())
+  studyId       String
+  sopInstanceUID String       @unique
+  imageUrl      String
+  thumbnailUrl  String?
+  metadata      Json?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  study         DICOMStudy     @relation(fields: [studyId], references: [id], onDelete: Cascade)
+
+  @@map("dicom_images")
+}
+
+// ===== OCR & NLP PROCESSING =====
+model DocumentProcessing {
+  id            String        @id @default(cuid())
+  documentId    String
+  documentType  String
+  status        ProcessingStatus @default(PENDING)
+  originalText  String?
+  extractedText String?
+  entities      Json?         // Extracted medical entities
+  confidence    Decimal?      @db.Decimal(3, 2)
+  processedAt   DateTime?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+
+  @@map("document_processing")
+}
+
+// ===== WORKFLOW AUTOMATION =====
+model WorkflowInstance {
+  id                  String              @id @default(cuid())
+  caseId              String
+  templateId          String
+  name                String
+  status              WorkflowStatus      @default(ACTIVE)
+  currentStep         Int                 @default(0)
+  totalSteps          Int
+  progress            Decimal             @default(0) @db.Decimal(5, 2)
+  startedAt           DateTime            @default(now())
+  completedAt         DateTime?
+  estimatedCompletion DateTime?
+  steps               WorkflowStep[]
+  createdAt           DateTime            @default(now())
+  updatedAt           DateTime            @updatedAt
+  case                OncologyCase        @relation(fields: [caseId], references: [id], onDelete: Cascade)
+
+  @@map("workflow_instances")
+}
+
+model WorkflowStep {
+  id                String          @id @default(cuid())
+  workflowId        String
+  stepId            String
+  name              String
+  type              String
+  required          Boolean         @default(true)
+  assignee          String
+  status            StepStatus      @default(PENDING)
+  order             Int
+  estimatedDuration Int             // in hours
+  actualDuration    Int?            // in hours
+  dueDate           DateTime
+  startedAt         DateTime?
+  completedAt       DateTime?
+  notes             String?
+  action            String?
+  workflow          WorkflowInstance @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@map("workflow_steps")
+}
+
+enum WorkflowStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+enum StepStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  OVERDUE
+}
+model AuditLog {
+  id            String        @id @default(cuid())
+  userId        String?
+  action        String
+  resourceType  String?
+  resourceId    String?
+  details       Json?
+  ipAddress     String?
+  userAgent     String?
+  timestamp     DateTime      @default(now())
+  user          User?         @relation(fields: [userId], references: [id])
+
+  @@map("audit_logs")
+}
+
+model SecurityEvent {
+  id            String        @id @default(cuid())
+  type          SecurityEventType
+  severity      SecuritySeverity
+  description   String
+  ipAddress     String?
+  userAgent     String?
+  userId        String?
+  details       Json?
+  resolved      Boolean       @default(false)
+  resolvedAt    DateTime?
+  createdAt     DateTime      @default(now())
+
+  @@map("security_events")
+}
+
+// ===== EXISTING MODELS (Enhanced) =====
+model Hospital {
+  id                           String        @id @default(cuid())
+  name                         String
+  description                  String
+  city                         String
+  state                        String
+  country                      String
+  address                      String
+  phone                        String
+  email                        String
+  website                      String?
+  established                  Int
+  bedCount                     Int
+  accreditation                String[]
+  specialties                  String[]
+  internationalPatientServices Boolean       @default(true)
+  languages                    String[]      @default(["en"])
+  prayerRooms                  Boolean       @default(false)
+  halalMeals                   Boolean       @default(false)
+  femaleStaff                  Boolean       @default(false)
+  airportDistance              String?
+  nearbyHotels                 String[]
+  images                       String[]
+  rating                       Decimal       @default(0) @db.Decimal(3, 2)
+  createdAt                    DateTime      @default(now())
+  updatedAt                    DateTime      @updatedAt
+  appointments                 Appointment[]
+  doctors                      Doctor[]
+  treatments                   Treatment[]
+
+  @@map("hospitals")
+}
+
+model Treatment {
+  id            String        @id @default(cuid())
+  name          String
+  description   String
+  specialty     String
+  subSpecialty  String?
+  duration      String
+  recoveryTime  String
+  successRate   Decimal       @db.Decimal(5, 2)
+  risks         String[]
+  benefits      String[]
+  preProcedure  String[]
+  postProcedure String[]
+  alternatives  String[]
+  basePrice     Decimal       @db.Decimal(10, 2)
+  currency      String        @default("USD")
+  hospitalId    String
+  doctorId      String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  appointments  Appointment[]
+  doctor        Doctor?       @relation(fields: [doctorId], references: [id])
+  hospital      Hospital      @relation(fields: [hospitalId], references: [id])
+
+  @@map("treatments")
+}
+
+model Appointment {
+  id           String            @id @default(cuid())
+  type         AppointmentType
+  status       AppointmentStatus @default(PENDING)
+  scheduledAt  DateTime
+  duration     Int
+  patientId    String
+  doctorId     String
+  hospitalId   String
+  treatmentId  String?
+  patientNotes String?
+  doctorNotes  String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  doctor       Doctor            @relation(fields: [doctorId], references: [id])
+  hospital     Hospital          @relation(fields: [hospitalId], references: [id])
+  patient      Patient           @relation(fields: [patientId], references: [id])
+  treatment    Treatment?        @relation(fields: [treatmentId], references: [id])
+  payments     Payment[]
+
+  @@map("appointments")
+}
+
+model Payment {
+  id            String        @id @default(cuid())
+  amount        Decimal       @db.Decimal(10, 2)
+  currency      String        @default("USD")
+  status        PaymentStatus @default(PENDING)
+  method        PaymentMethod
+  appointmentId String?
+  consultationId String?
+  patientId     String
+  transactionId String?
+  gateway       String?
+  description   String?
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  appointment   Appointment?  @relation(fields: [appointmentId], references: [id])
+  consultation Consultation?  @relation(fields: [consultationId], references: [id])
+  patient       Patient       @relation(fields: [patientId], references: [id])
+
+  @@map("payments")
+}
+
+model Review {
+  id        String   @id @default(cuid())
+  rating    Int
+  comment   String
+  treatment String?
+  patientId String
+  doctorId  String
+  verified  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  doctor    Doctor   @relation(fields: [doctorId], references: [id])
+  patient   Patient  @relation(fields: [patientId], references: [id])
+
+  @@map("reviews")
+}
+
+model MedicalRecord {
+  id          String   @id @default(cuid())
+  type        String
+  title       String
+  description String?
+  fileUrl     String
+  fileType    String
+  fileSize    Int
+  patientId   String
+  uploadedBy  String
+  tags        String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  patient     Patient  @relation(fields: [patientId], references: [id])
+
+  @@map("medical_records")
+}
+
+model Admin {
+  id          String   @id @default(cuid())
+  userId      String   @unique
+  permissions String[]
+  department  String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("admins")
+}
+
+model Notification {
+  id            String           @id @default(cuid())
+  type          NotificationType
+  title         String
+  message       String
+  read          Boolean          @default(false)
+  userId        String
+  referenceType String?
+  referenceId   String?
+  createdAt     DateTime         @default(now())
+  updatedAt     DateTime         @updatedAt
+  user          User             @relation(fields: [userId], references: [id])
+
+  @@map("notifications")
+}
+
+model Consultation {
+  id           String            @id @default(cuid())
+  type         ConsultationType
+  status       ConsultationStatus @default(SCHEDULED)
+  scheduledAt  DateTime
+  duration     Int
+  patientId    String
+  doctorId     String
+  meetingUrl   String?
+  meetingId    String?
+  notes        String?
+  symptoms     String?
+  diagnosis    String?
+  prescription String?
+  followUpDate DateTime?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  doctor       Doctor            @relation(fields: [doctorId], references: [id])
+  patient       Patient           @relation(fields: [patientId], references: [id])
+  payments     Payment[]
+
+  @@map("consultations")
+}
+
+// ===== ENUMS =====
+enum UserRole {
+  PATIENT
+  DOCTOR
+  ADMIN
+  COORDINATOR
+}
+
+enum OncologyCaseStatus {
+  INTAKE
+  REVIEW
+  ASSIGNED
+  IN_PROGRESS
+  TUMOR_BOARD_REVIEW
+  TREATMENT_PLANNING
+  TREATMENT_IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum CasePriority {
+  LOW
+  MEDIUM
+  HIGH
+  URGENT
+}
+
+enum AttachmentType {
+  MEDICAL_RECORD
+  IMAGING
+  LAB_REPORT
+  PATHOLOGY
+  CONSENT_FORM
+  INSURANCE
+  OTHER
+}
+
+enum MilestoneStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum ExperienceLevel {
+  JUNIOR
+  MID_LEVEL
+  SENIOR
+  EXPERT
+}
+
+enum ProcessingStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum SecurityEventType {
+  LOGIN_ATTEMPT
+  ACCESS_DENIED
+  SUSPICIOUS_ACTIVITY
+  DATA_EXPORT
+  CONFIGURATION_CHANGE
+}
+
+enum SecuritySeverity {
+  LOW
+  MEDIUM
+  HIGH
+  CRITICAL
+}
+
+enum AppointmentType {
+  TELE_CONSULTATION
+  IN_PERSON_CONSULTATION
+  SECOND_OPINION
+  TREATMENT
+  FOLLOW_UP
+}
+
+enum AppointmentStatus {
+  PENDING
+  CONFIRMED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}
+
+enum PaymentStatus {
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+  REFUNDED
+  CANCELLED
+}
+
+enum PaymentMethod {
+  CREDIT_CARD
+  DEBIT_CARD
+  UPI
+  BANK_TRANSFER
+  PAYPAL
+  STRIPE
+}
+
+enum NotificationType {
+  APPOINTMENT
+  PAYMENT
+  SYSTEM
+  REMINDER
+  UPDATE
+  CASE_UPDATE
+  TUMOR_BOARD
+}
+
+enum ConsultationType {
+  VIDEO_CALL
+  VOICE_CALL
+  CHAT
+  IN_PERSON
+}
+
+enum ConsultationStatus {
+  SCHEDULED
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+  NO_SHOW
+}

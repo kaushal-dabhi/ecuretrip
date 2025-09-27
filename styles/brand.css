@@ -1,0 +1,170 @@
+/* eCureTrip Design System - Sage Green & Blue Medical Tourism Theme */
+:root {
+  /* Primary Color Palette */
+  --primary-sage: #8FB885;        /* Main sage green */
+  --primary-sage-light: #A8C8A0;  /* Lighter sage variant */
+  --primary-sage-dark: #6B9561;   /* Darker sage for hover states */
+
+  --secondary-blue: #4A90E2;      /* CTA button blue */
+  --secondary-blue-light: #6BA3E8; /* Blue hover state */
+  --secondary-blue-dark: #3875C4;  /* Blue active state */
+
+  /* Background Colors */
+  --background-primary: #FFFFFF;   /* Pure white background */
+  --background-secondary: #F8FAF7; /* Very light sage tint */
+  --background-tertiary: #F5F8F4;  /* Subtle green background */
+
+  /* Medical Specialty Color Palette */
+  --cardiology: #8FB885;      /* Heart - Sage green */
+  --orthopedics: #5BA3C7;     /* Bone - Medical blue */
+  --neurology: #A8C692;       /* Brain - Light sage */
+  --oncology: #7A9B7A;        /* Cancer - Deeper sage */
+  --fertility: #D4B896;       /* Reproductive - Warm beige */
+
+  --dental: #6BA3E8;          /* Tooth - Light blue */
+  --cosmetic: #5BA3C7;        /* Surgery - Professional blue */
+  --spine: #9BC49B;           /* Spine - Natural green */
+  --transplant: #C5A572;      /* Organ - Earthy brown */
+  --pediatrics: #B8D4B8;      /* Children - Soft green */
+
+  /* Text & Typography Colors */
+  --text-primary: #2C3E2D;        /* Dark green-gray for headings */
+  --text-secondary: #4A5D4B;      /* Medium green-gray for body */
+  --text-tertiary: #6B7B6C;       /* Light green-gray for captions */
+  --text-accent: #8FB885;         /* Sage green for highlights */
+  --text-white: #FFFFFF;          /* White text on dark backgrounds */
+
+  /* Interactive States */
+  --button-primary: #4A90E2;      /* Primary button */
+  --button-primary-hover: #3875C4; /* Primary button hover */
+  --button-primary-active: #2D5AA0; /* Primary button active */
+
+  --button-secondary: #8FB885;    /* Secondary button */
+  --button-secondary-hover: #6B9561; /* Secondary hover */
+  --button-secondary-active: #4A6B40; /* Secondary active */
+
+  /* Link States */
+  --link-default: #4A90E2;        /* Default links */
+  --link-hover: #3875C4;          /* Link hover */
+  --link-visited: #6B7B9C;        /* Visited links */
+
+  /* Status & Feedback Colors */
+  --success: #7CB342;             /* Success messages */
+  --warning: #FFB74D;             /* Warning messages */
+  --error: #E57373;               /* Error messages */
+  --info: #42A5F5;                /* Info messages */
+
+  /* Border Colors */
+  --border-light: #E8F1E6;        /* Light borders */
+  --border-medium: #D0E0CD;       /* Medium borders */
+  --border-dark: #B8CDB5;         /* Dark borders */
+
+  /* Typography System */
+  --font-family: 'Inter', 'Helvetica Neue', 'Segoe UI', 'Roboto', sans-serif;
+  --font-weight-light: 300;
+  --font-weight-regular: 400;
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  /* Typography Scale */
+  --h1-size: 2.5rem;      /* 40px - Hero headlines */
+  --h1-weight: 700;
+  --h1-color: var(--text-primary);
+
+  --h2-size: 2rem;        /* 32px - Section headers */
+  --h2-weight: 600;
+  --h2-color: var(--text-primary);
+
+  --h3-size: 1.5rem;      /* 24px - Subsection headers */
+  --h3-weight: 600;
+  --h3-color: var(--text-primary);
+
+  --h4-size: 1.25rem;     /* 20px - Card titles */
+  --h4-weight: 500;
+  --h4-color: var(--text-secondary);
+
+  /* Body Text */
+  --body-large: 1.125rem; /* 18px - Important body text */
+  --body-regular: 1rem;   /* 16px - Regular body text */
+  --body-small: 0.875rem; /* 14px - Secondary text */
+  --caption: 0.75rem;     /* 12px - Captions */
+
+  /* Line Heights */
+  --line-height-tight: 1.2;
+  --line-height-normal: 1.5;
+  --line-height-relaxed: 1.7;
+
+  /* Spacing System */
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --spacing-xxl: 3rem;
+
+  /* Border Radius */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 16px;
+  --radius-full: 50px;
+
+  /* Shadows */
+  --shadow-sm: 0 2px 4px rgba(143, 184, 133, 0.1);
+  --shadow-md: 0 4px 20px rgba(143, 184, 133, 0.15);
+  --shadow-lg: 0 8px 32px rgba(143, 184, 133, 0.2);
+
+  /* Responsive Breakpoints */
+  --breakpoint-sm: 576px;   /* Small devices */
+  --breakpoint-md: 768px;   /* Medium devices */
+  --breakpoint-lg: 992px;   /* Large devices */
+  --breakpoint-xl: 1200px;  /* Extra large devices */
+  --breakpoint-xxl: 1400px; /* Extra extra large devices */
+
+  /* Accessibility */
+  --contrast-primary: 7.2:1;      /* Primary text on white */
+  --contrast-secondary: 5.8:1;    /* Secondary text on white */
+  --contrast-button: 4.8:1;       /* Button text on blue */
+  --contrast-sage-white: 5.1:1;   /* White text on sage */
+
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 250ms ease-in-out;
+  --transition-slow: 350ms ease-in-out;
+
+  /* Z-Index Scale */
+  --z-dropdown: 1000;
+  --z-sticky: 1020;
+  --z-fixed: 1030;
+  --z-modal-backdrop: 1040;
+  --z-modal: 1050;
+  --z-popover: 1060;
+  --z-tooltip: 1070;
+  --z-toast: 1080;
+}
+
+/* Base Styles */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background-primary);
+  color: var(--text-primary);
+  font-feature-settings: "rlig" 1, "calt" 1;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Focus States */
+*:focus-visible {
+  outline: 2px solid var(--primary-sage);
+  outline-offset: 2px;
+}
+
+/* Selection */
+::selection {
+  background: var(--primary-sage-light);
+  color: var(--text-white);
+}

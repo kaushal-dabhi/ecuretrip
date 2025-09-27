@@ -1,0 +1,50 @@
+/* eCureTrip Design System - Typography & Spacing */
+h1, h2, h3 {
+  color: var(--ink);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+h1 { font-size: var(--h1); }
+h2 { font-size: var(--h2); }
+h3 { font-size: var(--h3); }
+
+p, li, span, td {
+  font-size: var(--text);
+  line-height: 1.6;
+}
+
+.small {
+  font-size: var(--sub);
+  color: var(--muted);
+}
+
+.caption {
+  font-size: var(--cap);
+  letter-spacing: .04em;
+  color: var(--muted);
+  text-transform: uppercase;
+}
+
+.section {
+  padding-block: 64px;
+}
+
+/* Additional utility classes */
+.text-ink { color: var(--ink); }
+.text-body { color: var(--body); }
+.text-muted { color: var(--muted); }
+.text-primary { color: var(--primary); }
+.text-success { color: var(--success); }
+.text-warning { color: var(--warning); }
+.text-danger { color: var(--danger); }
+.text-price { color: var(--price); }
+.text-link { color: var(--link); }
+
+.bg-canvas { background: var(--canvas); }
+.bg-surface { background: var(--surface); }
+.bg-surface-2 { background: var(--surface-2); }
+.bg-primary { background: var(--primary); }
+.bg-success { background: var(--success); }
+.bg-warning { background: var(--warning); }
+.bg-danger { background: var(--danger); }
