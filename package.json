@@ -14,17 +14,10 @@
     "test:e2e:ui": "playwright test --ui",
     "upload-images": "node scripts/upload-images-to-supabase.js",
     "prepare-deploy": "node scripts/prepare-for-deployment.js",
-    "deploy": "npm run prepare-deploy && npm run upload-images && vercel deploy",
-    "db:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate",
-    "emr:setup": "tsx scripts/emr-setup.ts",
-    "emr:seed": "tsx scripts/emr-seed.ts",
-    "pacs:setup": "tsx scripts/pacs-setup.ts",
-    "create-sample-doctors": "tsx scripts/create-sample-doctors.ts"
+    "deploy": "npm run prepare-deploy && npm run upload-images && vercel deploy"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
-    "@prisma/client": "^6.13.0",
     "@supabase/auth-helpers-nextjs": "^0.10.0",
     "@supabase/ssr": "^0.7.0",
     "@supabase/supabase-js": "^2.58.0",
@@ -46,7 +39,6 @@
     "next": "^14.0.0",
     "nodemailer": "^6.9.7",
     "pdf-parse": "^1.1.1",
-    "prisma": "^6.13.0",
     "react": "^18.2.0",
     "react-calendar": "^4.6.1",
     "react-dom": "^18.2.0",
