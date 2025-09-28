@@ -50,10 +50,6 @@ export const config = {
     apiSecret: process.env.ZOOM_API_SECRET || ''
   },
 
-  // AI Services
-  openai: {
-    apiKey: process.env.OPENAI_API_KEY || ''
-  },
 
   // App
   app: {
