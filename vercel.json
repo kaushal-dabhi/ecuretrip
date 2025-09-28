@@ -1,0 +1,10 @@
+{
+  "buildCommand": "npm ci && npm run build",
+  "installCommand": "npm ci --force",
+  "framework": "nextjs",
+  "functions": {
+    "app/api/**/*.ts": {
+      "maxDuration": 30
+    }
+  }
+}
