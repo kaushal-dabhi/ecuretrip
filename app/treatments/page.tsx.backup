@@ -1,0 +1,437 @@
+'use client'
+
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { Treatment } from '@/types/database'
+import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
+import Button from '@/components/ui/Button'
+import { 
+  Search, 
+  Filter, 
+  DollarSign, 
+  Calendar, 
+  CheckCircle,
+  ArrowRight,
+  Shield,
+  Target,
+  Star,
+  MapPin,
+  Clock,
+  Users
+} from 'lucide-react'
+import TopUtilityBar from '@/components/TopUtilityBar'
+import Navigation from '@/components/Navigation'
+import Footer from '@/components/Footer'
+
+export default function TreatmentsSupabasePage() {
+  const [treatments, setTreatments] = useState<Treatment[]>([])
+  const [filteredTreatments, setFilteredTreatments] = useState<Treatment[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [searchTerm, setSearchTerm] = useState('')
+  const [selectedCategory, setSelectedCategory] = useState('')
+
+  useEffect(() => {
+    const staticTreatments = [
+      {
+        id: '1',
+        name: 'Breast Cancer Surgical Consult',
+        category: 'oncology',
+        description: 'Initial consult and treatment plan',
+        duration: '2-3 days',
+        base_price: 15000
+      },
+      {
+        id: '2', 
+        name: 'Chemotherapy Day Care',
+        category: 'oncology',
+        description: 'Per cycle day care charge',
+        duration: '1 day',
+        base_price: 30000
+      },
+      {
+        id: '3',
+        name: 'Pediatric Leukemia Consult',
+        category: 'pediatrics', 
+        description: 'Initial pediatric hemato oncology consult',
+        duration: '2-3 days',
+        base_price: 18000
+      },
+      {
+        id: '4',
+        name: 'Pediatric Solid Tumor Second Opinion',
+        category: 'pediatrics',
+        description: 'Specialist review with treatment plan',
+        duration: '2-3 days',
+        base_price: 20000
+      },
+      {
+        id: '5',
+        name: 'Cardiac Bypass Surgery',
+        category: 'cardiology',
+        description: 'Coronary artery bypass graft surgery',
+        duration: '5-7 days',
+        base_price: 250000
+      }
+    ]
+    setTreatments(staticTreatments)
+    setFilteredTreatments(staticTreatments)
+    setLoading(false)
+  }, [])
+
+  // Filter treatments based on search and category
+  useEffect(() => {
+    let filtered = treatments
+
+    if (searchTerm) {
+      filtered = filtered.filter(treatment =>
+        treatment.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        treatment.description?.toLowerCase().includes(searchTerm.toLowerCase())
+      )
+    }
+
+    if (selectedCategory) {
+      filtered = filtered.filter(treatment => treatment.category === selectedCategory)
+    }
+
+    setFilteredTreatments(filtered)
+  }, [treatments, searchTerm, selectedCategory])
+
+  const formatCurrency = (amount: number | null, currency: string = 'INR') => {
+    if (!amount) return 'Price on request'
+    
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: currency,
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0,
+    }).format(amount)
+  }
+
+  const getCategoryIcon = (category: string) => {
+    switch (category) {
+      case 'oncology':
+        return '🩺'
+      case 'pediatrics':
+        return '👶'
+      default:
+        return '🏥'
+    }
+  }
+
+  const getCategoryColor = (category: string) => {
+    switch (category) {
+      case 'oncology':
+        return 'bg-pink-100 text-pink-800 border-pink-200'
+      case 'pediatrics':
+        return 'bg-blue-100 text-blue-800 border-blue-200'
+      default:
+        return 'bg-gray-100 text-gray-800 border-gray-200'
+    }
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <TopUtilityBar />
+        <Navigation />
+        
+        {/* Header Bar */}
+        <div className="pt-32">
+          <div className="bg-[#2A4049] py-10">
+            <div className="max-w-6xl mx-auto px-6 text-center">
+              <h1 className="hero-text text-white mb-6 drop-shadow-lg">Medical Treatments</h1>
+              <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
+                Explore our comprehensive range of medical treatments with transparent pricing. 
+                Your journey to better health starts here.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="py-12">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+              <p className="text-lg text-gray-600">Loading treatments...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50">
+        <TopUtilityBar />
+        <Navigation />
+        
+        {/* Header Bar */}
+        <div className="pt-32">
+          <div className="bg-[#2A4049] py-10">
+            <div className="max-w-6xl mx-auto px-6 text-center">
+              <h1 className="hero-text text-white mb-6 drop-shadow-lg">Medical Treatments</h1>
+              <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
+                Explore our comprehensive range of medical treatments with transparent pricing. 
+                Your journey to better health starts here.
+              </p>
+            </div>
+          </div>
+        </div>
+        
+        <div className="py-12">
+          <div className="max-w-6xl mx-auto px-6">
+            <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+              <p><strong>Error:</strong> {error}</p>
+              <p className="mt-2 text-sm">
+                Make sure your Supabase project is set up and the database schema is created.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-[#ADC8A6]/10 via-white to-[#2A4049]/5">
+      <TopUtilityBar />
+      <Navigation />
+      
+      {/* Header Bar */}
+      <div className="pt-32">
+        <div className="bg-[#2A4049] py-10">
+          <div className="max-w-4xl mx-auto px-6 text-center">
+            <h1 className="hero-text text-white mb-6 drop-shadow-lg">Medical Treatments</h1>
+            <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
+              Explore our comprehensive range of medical treatments with transparent pricing. 
+              Your journey to better health starts here.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Search and Filters */}
+      <section className="py-6 bg-white/80 backdrop-blur-sm border-b border-[#ADC8A6]/20">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex flex-col lg:flex-row gap-6 items-center">
+            {/* Search Bar */}
+            <div className="flex-1 relative">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#2A4049] w-5 h-5" />
+              <input
+                type="text"
+                placeholder="Search treatments, specialties, or conditions..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 border-2 border-[#ADC8A6]/30 rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white/90 backdrop-blur-sm body transition-all duration-200"
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="relative">
+              <select
+                value={selectedCategory}
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                className="px-6 py-4 border-2 border-[#ADC8A6]/30 rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white/90 backdrop-blur-sm body appearance-none pr-10 transition-all duration-200"
+              >
+                <option value="">All Categories</option>
+                <option value="oncology">Oncology</option>
+                <option value="pediatrics">Pediatrics</option>
+                <option value="cardiology">Cardiology</option>
+                <option value="orthopedics">Orthopedics</option>
+                <option value="neurology">Neurology</option>
+                <option value="fertility">Fertility</option>
+                <option value="dental">Dental</option>
+                <option value="cosmetic">Cosmetic Surgery</option>
+                <option value="spine">Spine Surgery</option>
+                <option value="transplant">Transplant</option>
+              </select>
+              <div className="absolute right-3 top-1/2 transform -translate-y-1/2 pointer-events-none">
+                <svg className="w-5 h-5 text-[#2A4049]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Treatments Grid */}
+      <section className="py-12 bg-gradient-to-br from-[#ADC8A6]/5 via-white to-[#2A4049]/5 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(173,200,166,0.08)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(42,64,73,0.05)_0%,transparent_50%)]"></div>
+        {/* Floating Elements */}
+        <div className="absolute top-16 left-20 w-28 h-28 bg-[#ADC8A6]/20 rounded-full blur-xl"></div>
+        <div className="absolute bottom-16 right-20 w-36 h-36 bg-[#2A4049]/10 rounded-full blur-xl"></div>
+        
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          <div className="text-center mb-6">
+            <h2 className="section-title text-slate-900 mb-4">
+              Available Treatments
+            </h2>
+            <p className="description-text text-slate-600">
+              {filteredTreatments.length} treatment{filteredTreatments.length !== 1 ? 's' : ''} found
+            </p>
+          </div>
+
+          {filteredTreatments.length === 0 ? (
+            <div className="text-center py-12">
+              <div className="w-32 h-32 bg-gradient-to-br from-[#ADC8A6]/20 to-[#2A4049]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Search className="w-16 h-16 text-[#2A4049]" />
+              </div>
+              <h3 className="heading-3 text-slate-900 mb-3">No treatments found</h3>
+              <p className="description-text text-slate-600 mb-8 max-w-md mx-auto">
+                Try adjusting your search criteria or browse all treatments.
+              </p>
+              <Button 
+                onClick={() => {
+                  setSearchTerm('')
+                  setSelectedCategory('')
+                }}
+                className="bg-[#2A4049] hover:bg-[#1F2F35] text-white px-8 py-3 rounded-xl button-text transition-all duration-200"
+              >
+                Clear Filters
+              </Button>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              {filteredTreatments.map((treatment) => (
+                <div key={treatment.id} className="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#ADC8A6]/20 shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden">
+                  {/* Landscape Card Layout */}
+                  <div className="flex flex-col md:flex-row">
+                    {/* Left Side - Icon and Basic Info */}
+                    <div className="md:w-1/3 flex flex-col items-center justify-center bg-gradient-to-br from-[#ADC8A6]/5 to-[#2A4049]/5">
+                      {treatment.category === 'oncology' ? (
+                        <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white text-4xl">🧬</span>
+                        </div>
+                      ) : treatment.category === 'pediatrics' ? (
+                        <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white text-4xl">👶</span>
+                        </div>
+                      ) : (
+                        <div className="w-full h-full bg-[#2A4049] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white text-3xl">{getCategoryIcon(treatment.category)}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Right Side - Details */}
+                    <div className="md:w-2/3 p-6">
+                      <div className="h-full flex flex-col">
+                        {/* Title and Description */}
+                        <div className="mb-4">
+                          <h3 className="card-title text-black mb-2 transition-colors">
+                            {treatment.name}
+                          </h3>
+                          {treatment.description && (
+                            <p className="body-small text-black leading-relaxed line-clamp-2">
+                              {treatment.description}
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Price and Features */}
+                        <div className="flex-1 mb-4">
+                          <div className="flex items-center justify-between p-3 bg-[#ADC8A6] rounded-xl mb-3">
+                            <div className="flex items-center gap-2">
+                              <DollarSign className="w-4 h-4 text-black" />
+                              <span className="body-small font-semibold text-black">Starting from</span>
+                            </div>
+                            <div className="text-lg font-bold text-black">
+                              {formatCurrency(treatment.base_price, treatment.currency)}
+                            </div>
+                          </div>
+
+                          {/* Features - Compact */}
+                          <div className="grid grid-cols-1 gap-1">
+                            <div className="flex items-center gap-2 body-small text-black">
+                              <CheckCircle className="w-3 h-3 text-[#145263] flex-shrink-0" />
+                              <span>Expert consultation</span>
+                            </div>
+                            <div className="flex items-center gap-2 body-small text-black">
+                              <CheckCircle className="w-3 h-3 text-[#145263] flex-shrink-0" />
+                              <span>Transparent pricing</span>
+                            </div>
+                            <div className="flex items-center gap-2 body-small text-black">
+                              <CheckCircle className="w-3 h-3 text-[#145263] flex-shrink-0" />
+                              <span>Follow-up care</span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Action Button */}
+                        <div>
+                          <Link href={`/treatments/${treatment.id}`} className="w-full">
+                            <Button className="w-full bg-[#2A4049] hover:bg-[#1F2F35] text-white py-2.5 rounded-lg button-text transition-all duration-200 group-hover:shadow-lg" icon={ArrowRight} iconPosition="right">
+                              View Details
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </section>
+
+      {/* Features Section - Compact & Material */}
+      <section className="py-8 bg-white">
+        <div className="max-w-5xl mx-auto px-6">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl font-semibold text-slate-900 mb-2">
+              Why Choose Our Treatments?
+            </h2>
+            <p className="text-slate-600 text-sm max-w-2xl mx-auto">
+              Comprehensive medical care with complete transparency and support.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="group flex items-start gap-4 p-4 rounded-lg hover:bg-slate-50 transition-all duration-200">
+              <div className="w-10 h-10 bg-[#2A4049] rounded-lg flex items-center justify-center flex-shrink-0">
+                <Shield className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-medium text-black mb-1 text-sm">Secure & Safe</h3>
+                <p className="text-black text-xs leading-relaxed">
+                  Enterprise-grade security for your medical data and payments.
+                </p>
+              </div>
+            </div>
+
+            <div className="group flex items-start gap-4 p-4 rounded-lg hover:bg-slate-50 transition-all duration-200">
+              <div className="w-10 h-10 bg-[#ADC8A6] rounded-lg flex items-center justify-center flex-shrink-0">
+                <Target className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-medium text-black mb-1 text-sm">Expert Care</h3>
+                <p className="text-black text-xs leading-relaxed">
+                  Top medical specialists with years of experience.
+                </p>
+              </div>
+            </div>
+
+            <div className="group flex items-start gap-4 p-4 rounded-lg hover:bg-slate-50 transition-all duration-200">
+              <div className="w-10 h-10 bg-[#2A4049] rounded-lg flex items-center justify-center flex-shrink-0">
+                <DollarSign className="w-5 h-5 text-white" />
+              </div>
+              <div>
+                <h3 className="font-medium text-black mb-1 text-sm">Transparent Pricing</h3>
+                <p className="text-black text-xs leading-relaxed">
+                  No hidden costs. Clear, upfront pricing for all services.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <Footer />
+    </div>
+  )
+}
