@@ -1,90 +1,81 @@
-import { z } from "zod";
+// Simple validation types without zod dependency
 
-// Intake form validation
-export const IntakeFormSchema = z.object({
-  demographics: z.object({
-    name: z.string().min(2, "Name must be at least 2 characters"),
-    age: z.number().min(18, "Must be 18 or older").max(100, "Invalid age").optional(),
-    country: z.string().min(2, "Country is required"),
-    email: z.string().email("Invalid email address"),
-    phone: z.string().min(10, "Phone number is required").optional()
-  }),
-  procedure: z.object({
-    sku: z.enum(["TKR_STANDARD", "THR_STANDARD", "ACL_ARTHRO", "IVF_CYCLE"]).optional(),
-    budget: z.union([z.string(), z.number()]).optional(),
-    preferredCity: z.string().optional()
-  }),
-  reports: z.array(z.string()).optional(),
-  comorbidities: z.union([z.string(), z.array(z.string())]).optional(),
-  language: z.string().min(1, "Language preference is required").optional(),
-  communication: z.object({
-    email: z.boolean().optional(),
-    phone: z.boolean().optional(),
-    whatsapp: z.boolean().optional()
-  }).optional(),
-  consent: z.boolean().refine(val => val === true, "Consent is required").optional(),
-  marketing: z.boolean().optional()
-});
+// Intake form data type
+export interface IntakeFormData {
+  demographics: {
+    name: string;
+    age?: number;
+    country: string;
+    email: string;
+    phone?: string;
+  };
+  procedure?: {
+    sku?: "TKR_STANDARD" | "THR_STANDARD" | "ACL_ARTHRO" | "IVF_CYCLE";
+    budget?: string | number;
+    preferredCity?: string;
+  };
+  reports?: string[];
+  comorbidities?: string | string[];
+  language?: string;
+  communication?: {
+    email?: boolean;
+    phone?: boolean;
+    whatsapp?: boolean;
+  };
+  consent?: boolean;
+  marketing?: boolean;
+}
 
-// Match request validation
-export const MatchRequestSchema = z.object({
-  procedureSku: z.enum(["TKR_STANDARD", "THR_STANDARD", "ACL_ARTHRO", "IVF_CYCLE"]),
-  locale: z.enum(["en", "ar", "sw"]),
-  budget: z.number().min(1000),
-  comorbidities: z.array(z.string()),
-  language: z.string()
-});
+// Match request type
+export interface MatchRequest {
+  procedureSku: "TKR_STANDARD" | "THR_STANDARD" | "ACL_ARTHRO" | "IVF_CYCLE";
+  locale: "en" | "ar" | "sw";
+  budget: number;
+  comorbidities: string[];
+  language: string;
+}
 
-// Quote request validation
-export const QuoteRequestSchema = z.object({
-  patientId: z.string().min(1, "Patient ID is required"),
-  surgeonSlug: z.string().min(1, "Surgeon is required"),
-  packageSku: z.enum(["TKR_STANDARD", "THR_STANDARD", "ACL_ARTHRO", "IVF_CYCLE"]),
-  addons: z.array(z.string())
-});
+// Quote request type
+export interface QuoteRequest {
+  patientId: string;
+  surgeonSlug: string;
+  packageSku: "TKR_STANDARD" | "THR_STANDARD" | "ACL_ARTHRO" | "IVF_CYCLE";
+  addons: string[];
+}
 
-// Escrow request validation
-export const EscrowRequestSchema = z.object({
-  quoteId: z.string().min(1, "Quote ID is required"),
-  amountUSD: z.number().min(100, "Amount must be at least $100")
-});
+// Escrow request type
+export interface EscrowRequest {
+  quoteId: string;
+  amountUSD: number;
+}
 
-// Visa letter request validation
-export const VisaLetterRequestSchema = z.object({
-  caseId: z.string().min(1, "Case ID is required"),
-  patient: z.object({
-    name: z.string(),
-    passport: z.string(),
-    nationality: z.string()
-  }),
-  hospital: z.object({
-    name: z.string(),
-    address: z.string()
-  })
-});
+// Visa letter request type
+export interface VisaLetterRequest {
+  caseId: string;
+  patient: {
+    name: string;
+    passport: string;
+    nationality: string;
+  };
+  hospital: {
+    name: string;
+    address: string;
+  };
+}
 
-// Review submission validation
-export const ReviewSubmissionSchema = z.object({
-  caseId: z.string().min(1, "Case ID is required"),
-  rating: z.number().min(1).max(5),
-  text: z.string().min(10, "Review must be at least 10 characters"),
-  kyc: z.boolean().refine(val => val === true, "KYC verification is required")
-});
+// Review submission type
+export interface ReviewSubmission {
+  caseId: string;
+  rating: number;
+  text: string;
+  kyc: boolean;
+}
 
-// PROM submission validation
-export const PROMSubmissionSchema = z.object({
-  caseId: z.string().min(1, "Case ID is required"),
-  instrument: z.string().min(1, "Assessment instrument is required"),
-  timepoint: z.enum(["D0", "D30", "D90"]),
-  scores: z.record(z.string(), z.number())
-});
-
-// Types derived from schemas
-export type IntakeFormData = z.infer<typeof IntakeFormSchema>;
-export type MatchRequest = z.infer<typeof MatchRequestSchema>;
-export type QuoteRequest = z.infer<typeof QuoteRequestSchema>;
-export type EscrowRequest = z.infer<typeof EscrowRequestSchema>;
-export type VisaLetterRequest = z.infer<typeof VisaLetterRequestSchema>;
-export type ReviewSubmission = z.infer<typeof ReviewSubmissionSchema>;
-export type PROMSubmission = z.infer<typeof PROMSubmissionSchema>;
+// PROM submission type
+export interface PROMSubmission {
+  caseId: string;
+  instrument: string;
+  timepoint: "D0" | "D30" | "D90";
+  scores: Record<string, number>;
+}
 

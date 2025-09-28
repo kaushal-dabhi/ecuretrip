@@ -15,7 +15,7 @@ export default function AuthNavigation() {
           <Link href="/" className="flex items-center flex-shrink-0 group">
             <div className="relative w-32 h-32 flex items-center justify-center group-hover:scale-105 transition-transform duration-300">
               <Image
-                src="/uploads/Final E Cure Trip.png"
+                src="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png"
                 alt="eCureTrip Logo"
                 width={128}
                 height={128}

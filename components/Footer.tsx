@@ -24,7 +24,7 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center space-x-4 mb-6">
               <img 
-                src="/uploads/Final E Cure Trip.png" 
+                src="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png" 
                 alt="eCureTrip Logo" 
                 className="w-24 h-24 object-contain"
               />

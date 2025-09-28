@@ -11,24 +11,24 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/uploads/Final E Cure Trip.png',
+        url: '/favicon.png',
         sizes: '32x32',
         type: 'image/png',
       },
       {
-        url: '/uploads/Final E Cure Trip.png',
+        url: '/favicon.png',
         sizes: '16x16',
         type: 'image/png',
       },
     ],
     apple: [
       {
-        url: '/uploads/Final E Cure Trip.png',
+        url: '/favicon.png',
         sizes: '180x180',
         type: 'image/png',
       },
     ],
-    shortcut: '/uploads/Final E Cure Trip.png',
+    shortcut: '/favicon.png',
   },
   openGraph: {
     title: 'eCureTrip - Medical Tourism Platform',
@@ -73,11 +73,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/uploads/Final E Cure Trip.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/uploads/Final E Cure Trip.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/uploads/Final E Cure Trip.png" />
-        <link rel="shortcut icon" href="/uploads/Final E Cure Trip.png" />
-        <link rel="icon" href="/uploads/Final E Cure Trip.png" type="image/png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="/favicon.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="/favicon.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="/favicon.png" />
+        <link rel="shortcut icon" href="/favicon.png" />
+        <link rel="icon" href="/favicon.png" type="image/png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#2A4049" />
         <meta name="msapplication-TileColor" content="#2A4049" />

@@ -8,13 +8,13 @@
   "theme_color": "#2A4049",
   "icons": [
     {
-      "src": "/uploads/Final E Cure Trip.png",
+      "src": "/favicon.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any maskable"
     },
     {
-      "src": "/uploads/Final E Cure Trip.png",
+      "src": "/favicon.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

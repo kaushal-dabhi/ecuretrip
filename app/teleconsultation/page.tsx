@@ -25,7 +25,7 @@ import {
   VideoOff,
   Settings,
   Share,
-  EndCall
+  PhoneOff
 } from 'lucide-react'
 
 interface Doctor {
@@ -335,7 +335,7 @@ export default function TeleconsultationPage() {
                   className="rounded-full bg-red-600 text-white hover:bg-red-700"
                   onClick={endSession}
                 >
-                  <EndCall className="w-5 h-5" />
+                  <PhoneOff className="w-5 h-5" />
                 </Button>
               </div>
             </div>

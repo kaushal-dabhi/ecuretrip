@@ -282,17 +282,13 @@ export default function TreatmentDetailPage() {
                   <div className="flex items-start gap-6">
                     <div className="w-20 h-20 bg-gradient-to-br from-[#ADC8A6] to-[#2A4049] rounded-3xl flex items-center justify-center shadow-lg flex-shrink-0 overflow-hidden">
                       {treatment.category === 'oncology' ? (
-                        <img 
-                          src="/oncology.png" 
-                          alt="Oncology" 
-                          className="w-full h-full object-cover"
-                        />
+                        <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center">
+                          <span className="text-white text-3xl">🧬</span>
+                        </div>
                       ) : treatment.category === 'pediatrics' ? (
-                        <img 
-                          src="/pediatric.png" 
-                          alt="Pediatrics" 
-                          className="w-full h-full object-cover"
-                        />
+                        <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center">
+                          <span className="text-white text-3xl">👶</span>
+                        </div>
                       ) : (
                         <div className="text-white text-2xl">
                           {getCategoryIcon(treatment.category)}

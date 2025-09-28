@@ -177,7 +177,7 @@ const specialtyData = {
     title: 'Oncology',
     subtitle: 'Cancer Treatment',
     description: 'Oncology is the medical specialty that focuses on the diagnosis, treatment, and prevention of cancer. Our comprehensive cancer center provides multidisciplinary care using the latest treatment modalities.',
-    image: '/Medical_Specialties_Images/oncology.png',
+    image: 'https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/medical-specialties/oncology.png',
     icon: Shield,
     color: 'green',
     stats: {
