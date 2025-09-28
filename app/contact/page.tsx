@@ -101,29 +101,29 @@ export default function ContactPage() {
 
   if (isSubmitted) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50">
         <TopUtilityBar />
         <Navigation />
         
         <div className="pt-32 pb-16">
           <div className="max-w-4xl mx-auto px-6">
-            <Card className="text-center py-16">
+            <Card className="text-center py-8">
               <CardBody>
-                <div className="w-20 h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-6">
-                  <CheckCircle className="w-10 h-10 text-green-600" />
+                <div className="w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-6" style={{ backgroundColor: '#ADC8A6' }}>
+                  <CheckCircle className="w-10 h-10" style={{ color: '#2A4049' }} />
                 </div>
-                <h1 className="text-3xl font-bold text-slate-900 mb-4">Thank You!</h1>
-                <p className="text-lg text-gray-600 mb-8">
+                <h1 className="heading-2 mb-4">Thank You!</h1>
+                <p className="description-text mb-8">
                   Your message has been sent successfully. Our medical tourism experts will contact you within 2 hours.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link href="/">
-                    <Button size="lg">
+                    <Button size="lg" style={{ backgroundColor: '#2A4049' }}>
                       Return Home
                     </Button>
                   </Link>
                   <Link href="/treatments">
-                    <Button variant="outline" size="lg">
+                    <Button variant="outline" size="lg" style={{ borderColor: '#2A4049', color: '#2A4049' }}>
                       Browse Treatments
                     </Button>
                   </Link>
@@ -139,34 +139,37 @@ export default function ContactPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <TopUtilityBar />
       <Navigation />
       
-      <div className="pt-32 pb-16">
-        <div className="max-w-6xl mx-auto px-6">
-          {/* Header */}
-          <div className="text-center mb-12">
-            <h1 className="text-4xl font-bold text-slate-900 mb-4">Contact Us</h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+      {/* Header Bar */}
+      <div className="pt-32">
+        <div className="py-6" style={{ backgroundColor: '#2A4049' }}>
+          <div className="max-w-6xl mx-auto px-6 text-center">
+            <h1 className="section-title text-white mb-2 drop-shadow-lg">Contact Us</h1>
+            <p className="description-text text-white/90 drop-shadow-md max-w-3xl mx-auto">
               Ready to start your medical tourism journey? Our expert team is here to help you 
               every step of the way. Get in touch for a free consultation.
             </p>
           </div>
+        </div>
+      </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="pb-6">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          {/* Simple Single Column Layout */}
+          <div className="max-w-4xl mx-auto">
             {/* Contact Form */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <h2 className="text-2xl font-bold text-slate-900">Send us a Message</h2>
-                  <p className="text-gray-600">Fill out the form below and we'll get back to you within 2 hours.</p>
-                </CardHeader>
-                <CardBody>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="bg-white rounded-xl border-2 border-[#ADC8A6] p-6 mb-6">
+              <h2 className="text-2xl font-bold text-[#2A4049] mb-3">Send us a Message</h2>
+              <p className="text-gray-600 mb-6">Fill out the form below and we'll get back to you within 2 hours.</p>
+              
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
-                        <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="name" className="block label-text mb-2">
                           Full Name *
                         </label>
                         <Input
@@ -180,7 +183,7 @@ export default function ContactPage() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="email" className="block label-text mb-2">
                           Email Address *
                         </label>
                         <Input
@@ -197,7 +200,7 @@ export default function ContactPage() {
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="phone" className="block label-text mb-2">
                           Phone Number
                         </label>
                         <Input
@@ -210,7 +213,7 @@ export default function ContactPage() {
                         />
                       </div>
                       <div>
-                        <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="country" className="block label-text mb-2">
                           Country
                         </label>
                         <select
@@ -218,7 +221,7 @@ export default function ContactPage() {
                           name="country"
                           value={formData.country}
                           onChange={handleChange}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                          className="w-full px-3 py-2 border border-[#ADC8A6] rounded-lg focus:ring-2 focus:ring-[#2A4049] focus:border-transparent"
                         >
                           <option value="">Select your country</option>
                           <option value="US">United States</option>
@@ -234,7 +237,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="treatment" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="treatment" className="block label-text mb-2">
                         Treatment Interest
                       </label>
                       <select
@@ -242,7 +245,7 @@ export default function ContactPage() {
                         name="treatment"
                         value={formData.treatment}
                         onChange={handleChange}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-[#ADC8A6] rounded-lg focus:ring-2 focus:ring-[#2A4049] focus:border-transparent"
                       >
                         <option value="">Select treatment of interest</option>
                         <option value="oncology">Oncology</option>
@@ -258,7 +261,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="subject" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="subject" className="block label-text mb-2">
                         Subject *
                       </label>
                       <Input
@@ -273,7 +276,7 @@ export default function ContactPage() {
                     </div>
 
                     <div>
-                      <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-2">
+                      <label htmlFor="message" className="block label-text mb-2">
                         Message *
                       </label>
                       <textarea
@@ -284,90 +287,78 @@ export default function ContactPage() {
                         value={formData.message}
                         onChange={handleChange}
                         placeholder="Tell us about your medical tourism needs..."
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        className="w-full px-3 py-2 border border-[#ADC8A6] rounded-lg focus:ring-2 focus:ring-[#2A4049] focus:border-transparent"
                       />
                     </div>
 
                     <Button
                       type="submit"
                       loading={isSubmitting}
-                      className="w-full bg-blue-600 hover:bg-blue-700"
+                      className="w-full"
+                      style={{ backgroundColor: '#2A4049' }}
+                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1A2F36'}
+                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2A4049'}
                       icon={Send}
                     >
                       {isSubmitting ? 'Sending...' : 'Send Message'}
                     </Button>
                   </form>
-                </CardBody>
-              </Card>
             </div>
 
-            {/* Contact Information */}
-            <div className="space-y-8">
-              {/* Contact Details */}
-              <div className="space-y-6">
-                {contactInfo.map((info, index) => (
-                  <Card key={index}>
-                    <CardBody className="py-6">
-                      <div className="flex items-start gap-4">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <info.icon className="w-6 h-6 text-blue-600" />
-                        </div>
-                        <div>
-                          <h3 className="font-semibold text-slate-900 mb-2">{info.title}</h3>
-                          {info.details.map((detail, i) => (
-                            <p key={i} className="text-gray-600 text-sm mb-1">{detail}</p>
-                          ))}
-                          <p className="text-gray-500 text-xs mt-2">{info.description}</p>
-                        </div>
+            {/* Contact Info & Services - Simple Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {/* Contact Info */}
+              <div className="bg-white rounded-xl border-2 border-[#2A4049] p-4">
+                <h3 className="text-lg font-bold text-[#2A4049] mb-3">Contact Information</h3>
+                <div className="space-y-2">
+                  {contactInfo.map((info, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 rounded bg-[#ADC8A6]/10">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#ADC8A6]">
+                        <info.icon className="w-4 h-4 text-[#2A4049]" />
                       </div>
-                    </CardBody>
-                  </Card>
-                ))}
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-[#2A4049] text-sm">{info.title}</h4>
+                        {info.details.map((detail, i) => (
+                          <p key={i} className="text-xs text-gray-700">{detail}</p>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
 
               {/* Quick Services */}
-              <Card>
-                <CardHeader>
-                  <h3 className="text-lg font-bold text-slate-900">Quick Services</h3>
-                </CardHeader>
-                <CardBody>
-                  <div className="space-y-4">
-                    {services.map((service, index) => (
-                      <div key={index} className="flex items-start gap-3">
-                        <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <service.icon className="w-5 h-5 text-green-600" />
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-slate-900 mb-1">{service.title}</h4>
-                          <p className="text-gray-600 text-sm mb-2">{service.description}</p>
-                          <button className="text-blue-600 text-sm font-medium hover:underline">
-                            {service.action} →
-                          </button>
-                        </div>
+              <div className="bg-white rounded-xl border-2 border-[#ADC8A6] p-4">
+                <h3 className="text-lg font-bold text-[#2A4049] mb-3">Quick Services</h3>
+                <div className="space-y-2">
+                  {services.map((service, index) => (
+                    <div key={index} className="flex items-center gap-2 p-2 rounded bg-[#2A4049]/10">
+                      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 bg-[#2A4049]">
+                        <service.icon className="w-4 h-4 text-white" />
                       </div>
-                    ))}
-                  </div>
-                </CardBody>
-              </Card>
-            </div>
-          </div>
-
-          {/* Emergency Contact */}
-          <div className="mt-16">
-            <Card className="bg-red-50 border-red-200">
-              <CardBody className="py-8 text-center">
-                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Phone className="w-8 h-8 text-red-600" />
+                      <div className="flex-1">
+                        <h4 className="font-semibold text-[#2A4049] text-sm">{service.title}</h4>
+                        <button className="text-xs text-[#2A4049] hover:underline">
+                          {service.action} →
+                        </button>
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <h3 className="text-xl font-bold text-slate-900 mb-2">Emergency Support</h3>
-                <p className="text-gray-600 mb-4">
-                  For urgent medical tourism assistance, call our 24/7 emergency line
-                </p>
-                <a href="tel:+1-555-123-4567" className="text-2xl font-bold text-red-600 hover:underline">
+              </div>
+
+              {/* Emergency Contact */}
+              <div className="bg-white rounded-xl border-2 border-[#ADC8A6] p-4 text-center">
+                <div className="w-12 h-12 rounded-full flex items-center justify-center mx-auto mb-3 bg-[#ADC8A6]">
+                  <Phone className="w-6 h-6 text-[#2A4049]" />
+                </div>
+                <h4 className="font-bold text-[#2A4049] mb-2">Emergency Support</h4>
+                <p className="text-sm text-gray-600 mb-2">24/7 Medical Tourism Assistance</p>
+                <a href="tel:+1-555-123-4567" className="text-lg font-bold text-[#2A4049] hover:underline">
                   +1 (555) 123-4567
                 </a>
-              </CardBody>
-            </Card>
+              </div>
+            </div>
           </div>
         </div>
       </div>

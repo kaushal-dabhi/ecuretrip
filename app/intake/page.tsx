@@ -452,7 +452,7 @@ export default function IntakePage() {
       
       {/* Header Bar */}
       <div className="pt-32">
-        <div className="bg-[#2A4049] py-16">
+        <div className="bg-[#2A4049] py-10">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h1 className="hero-text text-white mb-6 drop-shadow-lg">Medical Intake Form</h1>
             <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
@@ -536,7 +536,7 @@ export default function IntakePage() {
           {/* Help Section */}
           <div className="mt-12 text-center">
             <Card className="bg-[#ADC8A6]/10 border-[#ADC8A6]/20">
-              <CardBody className="py-8">
+              <CardBody className="py-6">
                 <h3 className="heading-4 text-[#2A4049] mb-4">
                   Need Help Filling Out This Form?
                 </h3>

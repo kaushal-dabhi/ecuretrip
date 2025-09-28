@@ -183,7 +183,7 @@ export default function HospitalsPage() {
       
       {/* Header Bar */}
       <div className="pt-32">
-        <div className="bg-[#2A4049] py-16">
+        <div className="bg-[#2A4049] py-10">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h1 className="hero-text text-white mb-6 drop-shadow-lg">Partner Hospitals</h1>
             <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
@@ -195,9 +195,10 @@ export default function HospitalsPage() {
       </div>
 
       {/* Search and Filters */}
-      <section className="py-12 bg-white/80 backdrop-blur-sm border-b border-[#ADC8A6]/20">
-        <div className="max-w-6xl mx-auto px-6">
-          <div className="flex flex-col lg:flex-row gap-6 items-center">
+      <section className="py-6 bg-white relative overflow-hidden">
+        
+        <div className="max-w-6xl mx-auto px-6 relative z-10">
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
             {/* Search Bar */}
             <div className="flex-1 relative">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-[#2A4049] w-5 h-5" />
@@ -206,7 +207,7 @@ export default function HospitalsPage() {
                 placeholder="Search hospitals by name, location, or specialty..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 border-2 border-[#ADC8A6]/30 rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white/90 backdrop-blur-sm body transition-all duration-200"
+                className="w-full pl-12 pr-4 py-3 border-2 border-[#ADC8A6] rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white body transition-all duration-200 shadow-sm"
               />
             </div>
 
@@ -215,7 +216,7 @@ export default function HospitalsPage() {
               <select
                 value={selectedCountry}
                 onChange={(e) => setSelectedCountry(e.target.value)}
-                className="px-6 py-4 border-2 border-[#ADC8A6]/30 rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white/90 backdrop-blur-sm body appearance-none pr-10 transition-all duration-200"
+                className="px-6 py-3 border-2 border-[#ADC8A6] rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white body appearance-none pr-10 transition-all duration-200 shadow-sm"
               >
                 <option value="">All Countries</option>
                 {Array.from(new Set(hospitals.map(h => h.country))).map(country => (
@@ -234,7 +235,7 @@ export default function HospitalsPage() {
               <select
                 value={selectedSpecialty}
                 onChange={(e) => setSelectedSpecialty(e.target.value)}
-                className="px-6 py-4 border-2 border-[#ADC8A6]/30 rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white/90 backdrop-blur-sm body appearance-none pr-10 transition-all duration-200"
+                className="px-6 py-3 border-2 border-[#2A4049] rounded-xl focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] bg-white body appearance-none pr-10 transition-all duration-200 shadow-sm"
               >
                 <option value="">All Specialties</option>
                 {Array.from(new Set(hospitals.flatMap(h => h.specialties))).map(specialty => (
@@ -252,16 +253,11 @@ export default function HospitalsPage() {
       </section>
 
       {/* Hospitals Grid */}
-      <section className="py-20 bg-gradient-to-br from-[#ADC8A6]/5 via-white to-[#2A4049]/5 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(173,200,166,0.08)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(42,64,73,0.05)_0%,transparent_50%)]"></div>
-        {/* Floating Elements */}
-        <div className="absolute top-16 left-20 w-28 h-28 bg-[#ADC8A6]/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-16 right-20 w-36 h-36 bg-[#2A4049]/10 rounded-full blur-xl"></div>
+      <section className="py-8 bg-white relative overflow-hidden">
         
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
-            <h2 className="section-title text-slate-900 mb-4">
+          <div className="text-center mb-6">
+            <h2 className="section-title text-slate-900 mb-2">
               Partner Hospitals
             </h2>
             <p className="description-text text-slate-600">
@@ -290,18 +286,25 @@ export default function HospitalsPage() {
               </Button>
             </div>
           ) : (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-              {filteredHospitals.map((hospital) => (
-                <div key={hospital.id} className="group bg-white/80 backdrop-blur-sm rounded-2xl border-2 border-[#ADC8A6]/20 shadow-lg hover:shadow-2xl hover:scale-[1.02] transition-all duration-300 overflow-hidden">
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {filteredHospitals.map((hospital, index) => {
+                const cardColors = ['border-[#2A4049]', 'border-[#ADC8A6]', 'border-[#2A4049]'];
+                const iconColors = ['bg-[#2A4049]', 'bg-[#ADC8A6]', 'bg-[#2A4049]'];
+                const iconTextColors = ['text-white', 'text-black', 'text-white'];
+                const bgColors = ['bg-[#2A4049]/10', 'bg-[#ADC8A6]/10', 'bg-[#2A4049]/10'];
+                const currentColorIndex = index % 3;
+                
+                return (
+                <div key={hospital.id} className={`group bg-white rounded-xl border-2 ${cardColors[currentColorIndex]} shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300 overflow-hidden`}>
                   {/* Landscape Card Layout */}
                   <div className="flex flex-col md:flex-row">
                     {/* Left Side - Icon and Basic Info */}
-                    <div className="md:w-1/3 p-6 flex flex-col items-center justify-center bg-gradient-to-br from-[#ADC8A6]/5 to-[#2A4049]/5">
-                      <div className="w-20 h-20 bg-gradient-to-br from-[#ADC8A6] to-[#2A4049] rounded-2xl flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300">
-                        <Building className="w-10 h-10 text-white" />
+                    <div className={`md:w-1/3 p-4 flex flex-col items-center justify-center ${bgColors[currentColorIndex]}`}>
+                      <div className={`w-16 h-16 ${iconColors[currentColorIndex]} rounded-xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300 shadow-lg`}>
+                        <Building className={`w-8 h-8 ${iconTextColors[currentColorIndex]}`} />
                       </div>
                       <div className="flex items-center gap-1 text-[#2A4049] mb-2">
-                        <CheckCircle className="w-4 h-4" />
+                        <CheckCircle className="w-3 h-3" />
                         <span className="text-xs font-medium">Verified</span>
                       </div>
                       
@@ -324,14 +327,14 @@ export default function HospitalsPage() {
                     </div>
 
                     {/* Right Side - Details */}
-                    <div className="md:w-2/3 p-6">
+                    <div className="md:w-2/3 p-4">
                       <div className="h-full flex flex-col">
                         {/* Title and Location */}
-                        <div className="mb-4">
-                          <h3 className="card-title text-slate-900 mb-2 group-hover:text-[#2A4049] transition-colors">
+                        <div className="mb-3">
+                          <h3 className="card-title text-slate-900 mb-1 group-hover:text-[#2A4049] transition-colors">
                             {hospital.name}
                           </h3>
-                          <div className="flex items-center gap-2 text-slate-600 body-small mb-3">
+                          <div className="flex items-center gap-2 text-slate-600 body-small mb-2">
                             <MapPin className="w-3 h-3" />
                             <span>{hospital.location}</span>
                           </div>
@@ -345,10 +348,10 @@ export default function HospitalsPage() {
                         </div>
 
                         {/* Specialties and Contact */}
-                        <div className="flex-1 mb-4">
+                        <div className="flex-1 mb-3">
                           {/* Specialties */}
-                          <div className="mb-3">
-                            <h4 className="body-small font-semibold text-slate-900 mb-2">Specialties</h4>
+                          <div className="mb-2">
+                            <h4 className="body-small font-semibold text-slate-900 mb-1">Specialties</h4>
                             <div className="flex flex-wrap gap-1">
                               {hospital.specialties.slice(0, 3).map((specialty, index) => (
                                 <span 
@@ -392,7 +395,7 @@ export default function HospitalsPage() {
                         </div>
 
                         {/* Action Buttons */}
-                        <div className="flex gap-3">
+                        <div className="flex gap-2">
                           <Button 
                             className="flex-1 bg-[#ADC8A6] text-black hover:bg-[#9BB896] py-2 rounded-lg font-medium transition-all duration-200 shadow-sm hover:shadow-md text-sm"
                             icon={MessageCircle}
@@ -410,60 +413,63 @@ export default function HospitalsPage() {
                     </div>
                   </div>
                 </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="py-16 bg-gradient-to-br from-[#ADC8A6]/10 via-white to-[#2A4049]/5 relative overflow-hidden">
-        {/* Background Pattern */}
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,rgba(173,200,166,0.08)_0%,transparent_50%),radial-gradient(circle_at_70%_80%,rgba(42,64,73,0.05)_0%,transparent_50%)]"></div>
-        {/* Floating Elements */}
-        <div className="absolute top-12 left-16 w-24 h-24 bg-[#ADC8A6]/20 rounded-full blur-xl"></div>
-        <div className="absolute bottom-12 right-16 w-32 h-32 bg-[#2A4049]/10 rounded-full blur-xl"></div>
+      {/* Why Choose Our Hospitals Section */}
+      <section className="py-8 bg-white relative overflow-hidden">
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-[#2A4049]/25 rounded-full blur-xl"></div>
         
-        <div className="max-w-6xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-12">
-            <h2 className="section-title text-slate-900 mb-4">
-              Why Choose Our Partner Hospitals?
-            </h2>
-            <p className="description-text text-slate-600 max-w-3xl mx-auto">
-              Our partner hospitals are carefully selected for their excellence in medical care, 
-              international accreditations, and commitment to patient safety.
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div className="text-center p-6 bg-white/80 rounded-2xl shadow-lg border border-[#ADC8A6]/20">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#ADC8A6] to-[#2A4049] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Award className="w-10 h-10 text-white" />
+        <div className="max-w-4xl mx-auto px-6 text-center relative z-10">
+          <h2 className="section-title text-black mb-3">
+            Why Choose Our Hospitals?
+          </h2>
+          <p className="description-text text-black mb-8">
+            Partner with internationally accredited hospitals offering world-class medical facilities.
+          </p>
+          
+          <div className="flex flex-col md:flex-row justify-center items-start gap-6 md:gap-8">
+            {/* International Accreditation */}
+            <div className="flex items-start gap-3 max-w-xs">
+              <div className="w-10 h-10 bg-[#2A4049] rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                <Award className="w-5 h-5 text-white" />
               </div>
-              <h3 className="heading-4 text-slate-900 mb-4">International Accreditation</h3>
-              <p className="body text-slate-600">
-                JCI, NABH, and other international accreditations ensuring highest quality standards.
-              </p>
+              <div className="text-left">
+                <h3 className="card-title text-black mb-1">International Accreditation</h3>
+                <p className="body text-black">
+                  JCI, NABH, and ISO certified hospitals meeting global healthcare standards.
+                </p>
+              </div>
             </div>
 
-            <div className="text-center p-6 bg-white/80 rounded-2xl shadow-lg border border-[#ADC8A6]/20">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#ADC8A6] to-[#2A4049] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Shield className="w-10 h-10 text-white" />
+            {/* Advanced Technology */}
+            <div className="flex items-start gap-3 max-w-xs">
+              <div className="w-10 h-10 bg-[#ADC8A6] rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                <Building className="w-5 h-5 text-black" />
               </div>
-              <h3 className="heading-4 text-slate-900 mb-4">Advanced Technology</h3>
-              <p className="body text-slate-600">
-                State-of-the-art medical equipment and cutting-edge treatment facilities.
-              </p>
+              <div className="text-left">
+                <h3 className="card-title text-black mb-1">Advanced Technology</h3>
+                <p className="body text-black">
+                  State-of-the-art medical equipment and cutting-edge treatment facilities.
+                </p>
+              </div>
             </div>
 
-            <div className="text-center p-6 bg-white/80 rounded-2xl shadow-lg border border-[#ADC8A6]/20">
-              <div className="w-20 h-20 bg-gradient-to-br from-[#ADC8A6] to-[#2A4049] rounded-2xl flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300">
-                <Heart className="w-10 h-10 text-white" />
+            {/* Comprehensive Care */}
+            <div className="flex items-start gap-3 max-w-xs">
+              <div className="w-10 h-10 bg-[#ADC8A6] rounded-full flex items-center justify-center flex-shrink-0 shadow-lg">
+                <Heart className="w-5 h-5 text-white" />
               </div>
-              <h3 className="heading-4 text-slate-900 mb-4">Patient-Centered Care</h3>
-              <p className="body text-slate-600">
-                Comprehensive care with multilingual support and cultural sensitivity.
-              </p>
+              <div className="text-left">
+                <h3 className="card-title text-black mb-1">Comprehensive Care</h3>
+                <p className="body text-black">
+                  Full-spectrum medical services with multilingual support and cultural sensitivity.
+                </p>
+              </div>
             </div>
           </div>
         </div>

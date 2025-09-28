@@ -95,18 +95,18 @@ export default function SignInPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Mail className="w-8 h-8 text-blue-600" />
+                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#ADC8A6' }}>
+                  <Mail className="w-8 h-8" style={{ color: '#145263' }} />
               </div>
-                  <h2 className="text-2xl font-bold text-slate-900 mb-2">Sign In</h2>
-                  <p className="text-gray-600">
+                  <h2 className="heading-4 mb-2">Sign In</h2>
+                  <p className="body text-slate-600">
                     Enter your email and password to sign in to your account
                   </p>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block label-text mb-2">
                   Email Address
                 </label>
                 <Input
@@ -120,7 +120,7 @@ export default function SignInPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block label-text mb-2">
                   Password
                 </label>
                 <Input
@@ -136,7 +136,7 @@ export default function SignInPage() {
               <Button
                 onClick={signIn}
                 loading={loading}
-                className="w-full"
+                className="w-full bg-[#145263] hover:bg-[#0F3A47] text-white"
                 size="lg"
               >
                 Sign In
@@ -145,7 +145,7 @@ export default function SignInPage() {
               <div className="text-center">
                 <p className="text-sm text-gray-600">
                   Don't have an account?{' '}
-                  <Link href="/start-case" className="text-blue-600 hover:text-blue-700 font-medium">
+                  <Link href="/start-case" className="text-[#145263] hover:text-[#0F3A47] font-medium">
                     Get Started
                   </Link>
                 </p>
@@ -159,11 +159,11 @@ export default function SignInPage() {
         return (
           <div className="space-y-6">
             <div className="text-center">
-              <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <CheckCircle className="w-8 h-8 text-green-600" />
+              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#ADC8A6' }}>
+                <CheckCircle className="w-8 h-8" style={{ color: '#145263' }} />
               </div>
-              <h2 className="text-2xl font-bold text-slate-900 mb-2">Sign In Successful!</h2>
-              <p className="text-gray-600">
+              <h2 className="heading-4 mb-2">Sign In Successful!</h2>
+              <p className="body text-slate-600">
                 Redirecting you to your dashboard...
               </p>
             </div>
@@ -176,42 +176,32 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <TopUtilityBar />
       <Navigation />
       
       <div className="pt-32 pb-16">
         <div className="max-w-2xl mx-auto px-6">
-          <div className="mb-8">
+          <div className="mb-6">
             <Link href="/">
-              <Button variant="ghost" icon={ArrowLeft}>
+              <Button variant="ghost" icon={ArrowLeft} className="text-[#145263] hover:text-[#0F3A47]">
                 Back to Home
               </Button>
             </Link>
           </div>
 
           <Card className="max-w-lg mx-auto">
-            <CardHeader>
-              <div className="flex items-center justify-center mb-4">
-                <div className="flex space-x-2">
-                  {['email'].map((stepName, index) => (
-                    <div
-                      key={stepName}
-                      className={`w-3 h-3 rounded-full ${
-                        step === stepName
-                          ? 'bg-blue-600'
-                          : ['email'].indexOf(step) > index
-                          ? 'bg-green-500'
-                          : 'bg-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
+            <CardHeader className="pb-4">
+              <div className="text-center">
+                <h1 className="heading-3 text-slate-900 mb-2">
+                  {step === 'email' && 'Sign In to Your Account'}
+                  {step === 'success' && 'Welcome Back!'}
+                </h1>
+                <p className="body text-slate-600">
+                  {step === 'email' && 'Enter your credentials to access your dashboard'}
+                  {step === 'success' && 'You have successfully signed in'}
+                </p>
               </div>
-              <h1 className="text-3xl font-bold text-center text-slate-900">
-                {step === 'email' && 'Sign In to Your Account'}
-                {step === 'success' && 'Welcome Back!'}
-              </h1>
             </CardHeader>
             <CardBody>
               {error && (

@@ -3,16 +3,26 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { usePathname } from 'next/navigation';
 import { useApp } from '@/lib/contexts/AppContext';
 
 export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const pathname = usePathname();
   const { t } = useApp();
+
+  // Helper function to check if a link is active
+  const isActive = (path: string) => {
+    if (path === '/') {
+      return pathname === '/';
+    }
+    return pathname.startsWith(path);
+  };
 
   return (
     <nav className="fixed top-12 left-0 right-0 bg-white/95 backdrop-blur-md shadow-lg border-b border-slate-200 z-[85]">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-20">
+            <div className="flex items-center justify-between h-20">
           {/* Logo */}
               <Link href="/" className="flex items-center flex-shrink-0 group">
                 {/* eCureTrip Logo with subtle background highlight */}
@@ -30,66 +40,108 @@ export default function Navigation() {
 
           {/* Desktop Navigation - Centered with Optimized Spacing */}
           <div className="hidden lg:flex items-center space-x-6 flex-1 justify-center">
-                <Link href="/" className="nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg" onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2A4049';
-              e.currentTarget.style.color = 'white';
+                <Link href="/" className={`nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg ${
+                  isActive('/') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                }`} onMouseEnter={(e) => {
+              if (!isActive('/')) {
+                e.currentTarget.style.backgroundColor = '#2A4049';
+                e.currentTarget.style.color = 'white';
+              }
             }} onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#0f172a';
+              if (!isActive('/')) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#0f172a';
+              }
             }}>
               Home
             </Link>
-                <Link href="/intake" className="nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg" onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2A4049';
-              e.currentTarget.style.color = 'white';
+                <Link href="/intake" className={`nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg ${
+                  isActive('/intake') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                }`} onMouseEnter={(e) => {
+              if (!isActive('/intake')) {
+                e.currentTarget.style.backgroundColor = '#2A4049';
+                e.currentTarget.style.color = 'white';
+              }
             }} onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#0f172a';
+              if (!isActive('/intake')) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#0f172a';
+              }
             }}>
               {t('nav.intake')}
             </Link>
-                <Link href="/treatments" className="nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg" onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2A4049';
-              e.currentTarget.style.color = 'white';
+                <Link href="/treatments" className={`nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg ${
+                  isActive('/treatments') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                }`} onMouseEnter={(e) => {
+              if (!isActive('/treatments')) {
+                e.currentTarget.style.backgroundColor = '#2A4049';
+                e.currentTarget.style.color = 'white';
+              }
             }} onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#0f172a';
+              if (!isActive('/treatments')) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#0f172a';
+              }
             }}>
               {t('nav.treatments')}
             </Link>
-                <Link href="/doctors" className="nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg" onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2A4049';
-              e.currentTarget.style.color = 'white';
+                <Link href="/doctors" className={`nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg ${
+                  isActive('/doctors') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                }`} onMouseEnter={(e) => {
+              if (!isActive('/doctors')) {
+                e.currentTarget.style.backgroundColor = '#2A4049';
+                e.currentTarget.style.color = 'white';
+              }
             }} onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#0f172a';
+              if (!isActive('/doctors')) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#0f172a';
+              }
             }}>
               {t('nav.doctors')}
             </Link>
-                <Link href="/hospitals" className="nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg" onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2A4049';
-              e.currentTarget.style.color = 'white';
+                <Link href="/hospitals" className={`nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg ${
+                  isActive('/hospitals') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                }`} onMouseEnter={(e) => {
+              if (!isActive('/hospitals')) {
+                e.currentTarget.style.backgroundColor = '#2A4049';
+                e.currentTarget.style.color = 'white';
+              }
             }} onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#0f172a';
+              if (!isActive('/hospitals')) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#0f172a';
+              }
             }}>
               {t('nav.hospitals')}
             </Link>
-                <Link href="/about" className="nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg" onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2A4049';
-              e.currentTarget.style.color = 'white';
+                <Link href="/about" className={`nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg ${
+                  isActive('/about') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                }`} onMouseEnter={(e) => {
+              if (!isActive('/about')) {
+                e.currentTarget.style.backgroundColor = '#2A4049';
+                e.currentTarget.style.color = 'white';
+              }
             }} onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#0f172a';
+              if (!isActive('/about')) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#0f172a';
+              }
             }}>
               {t('nav.about')}
             </Link>
-                <Link href="/contact" className="nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg" onMouseEnter={(e) => {
-              e.currentTarget.style.backgroundColor = '#2A4049';
-              e.currentTarget.style.color = 'white';
+                <Link href="/contact" className={`nav-text transition-all duration-200 relative group px-4 py-2.5 rounded-lg ${
+                  isActive('/contact') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                }`} onMouseEnter={(e) => {
+              if (!isActive('/contact')) {
+                e.currentTarget.style.backgroundColor = '#2A4049';
+                e.currentTarget.style.color = 'white';
+              }
             }} onMouseLeave={(e) => {
-              e.currentTarget.style.backgroundColor = 'transparent';
-              e.currentTarget.style.color = '#0f172a';
+              if (!isActive('/contact')) {
+                e.currentTarget.style.backgroundColor = 'transparent';
+                e.currentTarget.style.color = '#0f172a';
+              }
             }}>
               {t('nav.contact')}
             </Link>
@@ -141,57 +193,93 @@ export default function Navigation() {
         {isMobileMenuOpen && (
           <div className="lg:hidden py-4 border-t border-slate-200">
             <div className="flex flex-col space-y-2">
-                  <Link href="/intake" className="nav-text transition-all duration-200 px-4 py-3 rounded-lg" onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#2A4049';
-                e.currentTarget.style.color = 'white';
+                  <Link href="/intake" className={`nav-text transition-all duration-200 px-4 py-3 rounded-lg ${
+                    isActive('/intake') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                  }`} onMouseEnter={(e) => {
+                if (!isActive('/intake')) {
+                  e.currentTarget.style.backgroundColor = '#2A4049';
+                  e.currentTarget.style.color = 'white';
+                }
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#0f172a';
+                if (!isActive('/intake')) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#0f172a';
+                }
               }}>
                 {t('nav.intake')}
               </Link>
-                  <Link href="/treatments" className="nav-text transition-all duration-200 px-4 py-3 rounded-lg" onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#2A4049';
-                e.currentTarget.style.color = 'white';
+                  <Link href="/treatments" className={`nav-text transition-all duration-200 px-4 py-3 rounded-lg ${
+                    isActive('/treatments') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                  }`} onMouseEnter={(e) => {
+                if (!isActive('/treatments')) {
+                  e.currentTarget.style.backgroundColor = '#2A4049';
+                  e.currentTarget.style.color = 'white';
+                }
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#0f172a';
+                if (!isActive('/treatments')) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#0f172a';
+                }
               }}>
                 {t('nav.treatments')}
               </Link>
-                  <Link href="/doctors" className="nav-text transition-all duration-200 px-4 py-3 rounded-lg" onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#2A4049';
-                e.currentTarget.style.color = 'white';
+                  <Link href="/doctors" className={`nav-text transition-all duration-200 px-4 py-3 rounded-lg ${
+                    isActive('/doctors') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                  }`} onMouseEnter={(e) => {
+                if (!isActive('/doctors')) {
+                  e.currentTarget.style.backgroundColor = '#2A4049';
+                  e.currentTarget.style.color = 'white';
+                }
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#0f172a';
+                if (!isActive('/doctors')) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#0f172a';
+                }
               }}>
                 {t('nav.doctors')}
               </Link>
-                  <Link href="/hospitals" className="nav-text transition-all duration-200 px-4 py-3 rounded-lg" onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#2A4049';
-                e.currentTarget.style.color = 'white';
+                  <Link href="/hospitals" className={`nav-text transition-all duration-200 px-4 py-3 rounded-lg ${
+                    isActive('/hospitals') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                  }`} onMouseEnter={(e) => {
+                if (!isActive('/hospitals')) {
+                  e.currentTarget.style.backgroundColor = '#2A4049';
+                  e.currentTarget.style.color = 'white';
+                }
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#0f172a';
+                if (!isActive('/hospitals')) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#0f172a';
+                }
               }}>
                 {t('nav.hospitals')}
               </Link>
-                  <Link href="/about" className="nav-text transition-all duration-200 px-4 py-3 rounded-lg" onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#2A4049';
-                e.currentTarget.style.color = 'white';
+                  <Link href="/about" className={`nav-text transition-all duration-200 px-4 py-3 rounded-lg ${
+                    isActive('/about') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                  }`} onMouseEnter={(e) => {
+                if (!isActive('/about')) {
+                  e.currentTarget.style.backgroundColor = '#2A4049';
+                  e.currentTarget.style.color = 'white';
+                }
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#0f172a';
+                if (!isActive('/about')) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#0f172a';
+                }
               }}>
                 {t('nav.about')}
               </Link>
-                  <Link href="/contact" className="nav-text transition-all duration-200 px-4 py-3 rounded-lg" onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#2A4049';
-                e.currentTarget.style.color = 'white';
+                  <Link href="/contact" className={`nav-text transition-all duration-200 px-4 py-3 rounded-lg ${
+                    isActive('/contact') ? 'bg-[#ADC8A6]/20 text-[#2A4049] font-semibold' : ''
+                  }`} onMouseEnter={(e) => {
+                if (!isActive('/contact')) {
+                  e.currentTarget.style.backgroundColor = '#2A4049';
+                  e.currentTarget.style.color = 'white';
+                }
               }} onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#0f172a';
+                if (!isActive('/contact')) {
+                  e.currentTarget.style.backgroundColor = 'transparent';
+                  e.currentTarget.style.color = '#0f172a';
+                }
               }}>
                 {t('nav.contact')}
               </Link>
