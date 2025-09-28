@@ -1,8 +1,5 @@
 'use client'
 
-import LangSwitcher from './LangSwitcher';
-import CurrencySwitcher from './CurrencySwitcher';
-
 export default function TopUtilityBar() {
   return (
     <div className="fixed top-0 left-0 right-0 bg-white/95 backdrop-blur-md border-b border-gray-200 z-[100]">
@@ -25,11 +22,10 @@ export default function TopUtilityBar() {
             </div>
           </div>
 
-          {/* Right Side - Language & Currency Switchers */}
+          {/* Right Side - Simple Info */}
           <div className="flex items-center space-x-6">
-            <div className="flex items-center space-x-3">
-              <LangSwitcher />
-              <CurrencySwitcher />
+            <div className="text-sm text-slate-600">
+              English • $ USD
             </div>
           </div>
         </div>

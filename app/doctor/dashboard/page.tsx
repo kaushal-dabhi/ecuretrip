@@ -29,7 +29,7 @@ import {
   Star
 } from 'lucide-react'
 import TopUtilityBar from '@/components/TopUtilityBar'
-import Navigation from '@/components/Navigation'
+import AuthenticatedNavigation from '@/components/AuthenticatedNavigation'
 import Footer from '@/components/Footer'
 import AuthGuard from '@/components/AuthGuard'
 
@@ -270,7 +270,7 @@ export default function DoctorDashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
         <TopUtilityBar />
-        <Navigation />
+        <AuthenticatedNavigation userRole="doctor" userName={profile?.full_name} />
         <div className="pt-32 pb-16">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center">
@@ -287,7 +287,7 @@ export default function DoctorDashboard() {
     <AuthGuard requiredRole="doctor">
       <div className="min-h-screen bg-gray-50">
         <TopUtilityBar />
-        <Navigation />
+        <AuthenticatedNavigation userRole="doctor" userName={profile?.full_name} />
       
       <div className="pt-32 pb-16">
         <div className="max-w-6xl mx-auto px-6">
@@ -325,16 +325,16 @@ export default function DoctorDashboard() {
         </div>
           )}
 
-          {/* Personalized Doctor Profile Header */}
-          <div className="mb-8">
+          {/* Compact Doctor Profile Header */}
+          <div className="mb-6 rounded-lg p-4 shadow-sm border" style={{ backgroundColor: '#F8FAFC', borderColor: '#2A4049' }}>
               <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                  <Stethoscope className="w-8 h-8 text-blue-600" />
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full flex items-center justify-center" style={{ backgroundColor: '#ADC8A6' }}>
+                  <Stethoscope className="w-5 h-5" style={{ color: '#2A4049' }} />
                 </div>
                 <div>
-                  <h1 className="heading-2 text-slate-900">Welcome back, Dr. {profile?.full_name || 'Doctor'}! 👨‍⚕️</h1>
-                  <p className="body text-gray-600">
+                  <h1 className="heading-4 text-slate-900">Welcome back, Dr. {profile?.full_name || 'Doctor'}</h1>
+                  <p className="body-small text-slate-600">
                     {profile?.specialty && `${profile.specialty} Specialist`} 
                     {profile?.hospital && ` at ${profile.hospital}`}
                     {profile?.experience && ` • ${profile.experience} years experience`}
@@ -342,26 +342,16 @@ export default function DoctorDashboard() {
                 </div>
               </div>
               <div className="text-right">
-                <div className="text-sm text-gray-500">Logged in as</div>
-                <div className="font-semibold text-slate-900">{profile?.email}</div>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="text-xs text-purple-600 bg-purple-50 px-2 py-1 rounded-full">
+                <div className="body-small text-slate-500">Logged in as</div>
+                <div className="font-semibold text-slate-900 text-sm">{profile?.email}</div>
+                <div className="flex items-center gap-2 mt-1">
+                  <div className="text-xs px-2 py-1 rounded-full" style={{ backgroundColor: '#FECA58', color: '#2A4049' }}>
                     Doctor Portal
-              </div>
-                  <button
-                    onClick={async () => {
-                      const supabase = createClient()
-                      await supabase.auth.signOut()
-                      router.push('/')
-                    }}
-                    className="text-xs text-gray-500 hover:text-red-600 transition-colors"
-                  >
-                    Logout
-                  </button>
+                </div>
                 </div>
               </div>
             </div>
-                </div>
+              </div>
 
           {/* Quick Actions */}
           <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">

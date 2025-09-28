@@ -366,17 +366,9 @@ export default function StartCasePage() {
         }
       }
 
-      // Create patient record only if user is a patient
-      if (selectedRole === 'patient') {
-        await createPatientRecord(user.id)
-        setSuccess('Profile created successfully')
-        // Redirect to patient dashboard
-        router.push('/patient/dashboard')
-      } else if (selectedRole === 'doctor') {
-        setSuccess('Doctor profile created successfully')
-        // Redirect to doctor dashboard
-        router.push('/doctor/dashboard')
-      }
+      // Set success and move to profile completion step
+      setSuccess('Account created successfully')
+      setStep('profile')
     } catch (err: any) {
       console.error('Full error details:', err)
       console.error('Error message:', err.message)
@@ -486,15 +478,15 @@ export default function StartCasePage() {
                   setSelectedRole('patient')
                   setStep('email')
                 }}
-                className="w-full p-6 border-2 border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-left group"
+                className="w-full p-6 border-2 border-[#FECA58]/30 rounded-xl hover:border-[#FECA58] hover:bg-[#FFF3D4] transition-all duration-200 text-left group"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors">
-                    <User className="w-6 h-6 text-blue-600" />
+                  <div className="w-12 h-12 bg-[#FECA58] rounded-full flex items-center justify-center group-hover:bg-[#FECA58]/80 transition-colors">
+                    <User className="w-6 h-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-slate-900">I'm a Patient</h3>
-                    <p className="text-sm text-gray-600">I need medical treatment or consultation</p>
+                    <h3 className="text-lg font-semibold text-[#145263]">I'm a Patient</h3>
+                    <p className="text-sm text-slate-600">I need medical treatment or consultation</p>
                   </div>
                 </div>
               </button>
@@ -504,17 +496,17 @@ export default function StartCasePage() {
                   setSelectedRole('doctor')
                   setStep('email')
                 }}
-                className="w-full p-6 border-2 border-slate-200 rounded-xl hover:border-blue-300 hover:bg-blue-50 transition-all duration-200 text-left group"
+                className="w-full p-6 border-2 border-[#FECA58]/30 rounded-xl hover:border-[#FECA58] hover:bg-[#FFF3D4] transition-all duration-200 text-left group"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center group-hover:bg-green-200 transition-colors">
-                    <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="w-12 h-12 bg-[#145263] rounded-full flex items-center justify-center group-hover:bg-[#145263]/80 transition-colors">
+                    <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
                   </div>
                   <div>
-                    <h3 className="text-lg font-semibold text-slate-900">I'm a Doctor</h3>
-                    <p className="text-sm text-gray-600">I provide medical services and consultations</p>
+                    <h3 className="text-lg font-semibold text-[#145263]">I'm a Doctor</h3>
+                    <p className="text-sm text-slate-600">I provide medical services and consultations</p>
                   </div>
                 </div>
               </button>
@@ -523,7 +515,7 @@ export default function StartCasePage() {
             <div className="text-center">
               <p className="text-sm text-gray-600">
                 Already have an account?{' '}
-                <Link href="/signin" className="text-blue-600 hover:text-blue-700 font-medium">
+                <Link href="/signin" className="text-[#145263] hover:text-[#0F3A47] font-medium">
                   Sign In
                 </Link>
               </p>
@@ -605,7 +597,7 @@ export default function StartCasePage() {
                   <Button
                     onClick={createAccount}
                     loading={loading}
-                    className="w-full"
+                    className="w-full bg-[#145263] hover:bg-[#0F3A47] text-white"
                     size="lg"
                     disabled={!selectedRole}
                   >
@@ -615,7 +607,7 @@ export default function StartCasePage() {
                   <div className="text-center">
                     <p className="text-sm text-gray-600">
                       Already have an account?{' '}
-                      <Link href="/signin" className="text-blue-600 hover:text-blue-700 font-medium">
+                      <Link href="/signin" className="text-[#145263] hover:text-[#0F3A47] font-medium">
                         Sign In
                       </Link>
                     </p>
@@ -670,7 +662,7 @@ export default function StartCasePage() {
               <Button
                 onClick={verifyOTP}
                 loading={loading}
-                className="w-full"
+                className="w-full bg-[#145263] hover:bg-[#0F3A47] text-white"
                 size="lg"
               >
                 Verify OTP
@@ -764,7 +756,7 @@ export default function StartCasePage() {
               <Button
                 onClick={createProfile}
                 loading={loading}
-                className="w-full"
+                className="w-full bg-[#145263] hover:bg-[#0F3A47] text-white"
                 size="lg"
               >
                 Complete {selectedRole === 'doctor' ? 'Doctor' : 'Patient'} Profile
@@ -817,7 +809,7 @@ export default function StartCasePage() {
               <Button
                 onClick={createCase}
                 loading={loading}
-                className="w-full"
+                className="w-full bg-[#145263] hover:bg-[#0F3A47] text-white"
                 size="lg"
               >
                 Create Case
@@ -867,46 +859,40 @@ export default function StartCasePage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-slate-50">
       <TopUtilityBar />
       <Navigation />
       
       <div className="pt-32 pb-16">
         <div className="max-w-2xl mx-auto px-6">
-          <div className="mb-8">
+          <div className="mb-6">
             <Link href={treatmentId ? `/treatments/${treatmentId}` : '/treatments'}>
-              <Button variant="ghost" icon={ArrowLeft}>
+              <Button variant="ghost" icon={ArrowLeft} className="text-[#145263] hover:text-[#0F3A47]">
                 Back
               </Button>
             </Link>
           </div>
 
           <Card className="max-w-lg mx-auto">
-            <CardHeader>
-              <div className="flex items-center justify-center mb-4">
-                <div className="flex space-x-2">
-                  {['role', 'email', 'otp', 'profile', 'case-form'].map((stepName, index) => (
-                    <div
-                      key={stepName}
-                      className={`w-3 h-3 rounded-full ${
-                        step === stepName
-                          ? 'bg-blue-600'
-                          : ['role', 'email', 'otp', 'profile', 'case-form'].indexOf(step) > index
-                          ? 'bg-green-500'
-                          : 'bg-gray-300'
-                      }`}
-                    />
-                  ))}
-                </div>
-              </div>
-              <h1 className="text-3xl font-bold text-center text-slate-900">
+            <CardHeader className="pb-4">
+              <div className="text-center">
+                <h1 className="heading-3 text-slate-900 mb-2">
                 {step === 'role' && 'Choose Your Role'}
                 {step === 'email' && 'Create Your Account'}
                 {step === 'otp' && 'Verify Your Email'}
                 {step === 'profile' && 'Complete Your Profile'}
                 {step === 'case-form' && 'Tell Us About Your Case'}
                 {step === 'success' && 'Account Created!'}
-              </h1>
+                </h1>
+                <p className="body text-slate-600">
+                  {step === 'role' && 'Select whether you are a patient or doctor'}
+                  {step === 'email' && 'Create your account to get started'}
+                  {step === 'otp' && 'Check your email for verification code'}
+                  {step === 'profile' && 'Complete your profile information'}
+                  {step === 'case-form' && 'Share details about your medical case'}
+                  {step === 'success' && 'Your account has been created successfully'}
+                </p>
+              </div>
             </CardHeader>
             <CardBody>
               {error && (

@@ -247,7 +247,7 @@ export default function PatientCasePage() {
                         <p className="text-gray-600">
                           {caseDetails.treatment.description}
                         </p>
-                      </div>
+                  </div>
                       {caseDetails.treatment.base_price && (
                         <div className="flex items-center gap-2">
                           <DollarSign className="w-4 h-4 text-green-600" />
@@ -255,9 +255,9 @@ export default function PatientCasePage() {
                             {caseDetails.treatment.currency} {caseDetails.treatment.base_price.toLocaleString()}
                           </span>
                           <span className="text-sm text-gray-500">(Base Price)</span>
-                        </div>
-                      )}
-                    </div>
+                  </div>
+                )}
+              </div>
                   </CardBody>
                 </Card>
               )}
@@ -324,9 +324,9 @@ export default function PatientCasePage() {
                             <Download className="w-4 h-4 mr-2" />
                             Download
                           </Button>
-                        </div>
-                      ))}
-                    </div>
+          </div>
+                ))}
+              </div>
                   )}
                 </CardBody>
               </Card>
@@ -358,13 +358,13 @@ export default function PatientCasePage() {
                             }`}>
                               {quote.status}
                             </span>
-                          </div>
+          </div>
                           <p className="text-sm text-gray-500">
                             {new Date(quote.created_at).toLocaleDateString()}
                           </p>
-                        </div>
+        </div>
                       ))}
-                    </div>
+            </div>
                     <div className="mt-4">
                       <Link href="/patient/quotes">
                         <Button className="w-full">
@@ -372,7 +372,7 @@ export default function PatientCasePage() {
                           View All Quotes
                         </Button>
                       </Link>
-                    </div>
+            </div>
                   </CardBody>
                 </Card>
               )}
@@ -404,7 +404,7 @@ export default function PatientCasePage() {
                         Back to Dashboard
                       </Button>
                     </Link>
-                  </div>
+            </div>
                 </CardBody>
               </Card>
             </div>

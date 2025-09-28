@@ -27,10 +27,19 @@ import {
   Download,
   Upload,
   History,
-  Settings
+  Settings,
+  TrendingUp,
+  Shield,
+  Bell,
+  Search,
+  Filter,
+  ChevronRight,
+  Star,
+  MapPin,
+  Globe
 } from 'lucide-react'
 import TopUtilityBar from '@/components/TopUtilityBar'
-import Navigation from '@/components/Navigation'
+import AuthenticatedNavigation from '@/components/AuthenticatedNavigation'
 import Footer from '@/components/Footer'
 import AuthGuard from '@/components/AuthGuard'
 
@@ -39,6 +48,15 @@ interface PatientProfile {
   full_name: string
   email: string
   role: string
+  date_of_birth?: string
+  phone?: string
+  address?: string
+  emergency_contact?: string
+  medical_history?: string
+  allergies?: string
+  medications?: string
+  blood_type?: string
+  insurance_info?: string
 }
 
 interface MedicalRecord {
@@ -46,76 +64,86 @@ interface MedicalRecord {
   title: string
   type: string
   date: string
-  doctor: string
+  doctor_name: string
+  hospital_name: string
   notes: string
   files: string[]
+  status: string
+  created_at: string
 }
 
 interface Appointment {
   id: string
+  doctor_name: string
+  specialty: string
+  hospital_name: string
   date: string
   time: string
-  doctor: string
-  type: string
-  status: string
+  type: 'consultation' | 'follow-up' | 'procedure'
+  status: 'scheduled' | 'completed' | 'cancelled'
+  notes?: string
+  location?: string
+  video_link?: string
+}
+
+interface Prescription {
+  id: string
+  medication_name: string
+  dosage: string
+  frequency: string
+  duration: string
+  doctor_name: string
+  prescribed_date: string
+  status: 'active' | 'completed' | 'discontinued'
+  instructions: string
+  side_effects?: string
+}
+
+interface LabResult {
+  id: string
+  test_name: string
+  date: string
+  doctor_name: string
+  hospital_name: string
+  results: string
+  normal_range: string
+  status: 'normal' | 'abnormal' | 'pending'
+  files: string[]
 }
 
 export default function PatientDashboard() {
   const router = useRouter()
+  const [user, setUser] = useState<any>(null)
   const [profile, setProfile] = useState<PatientProfile | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [activeTab, setActiveTab] = useState('overview')
+  
+  // Data states
   const [medicalRecords, setMedicalRecords] = useState<MedicalRecord[]>([])
   const [appointments, setAppointments] = useState<Appointment[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-  const [authChecked, setAuthChecked] = useState(false)
+  const [prescriptions, setPrescriptions] = useState<Prescription[]>([])
+  const [labResults, setLabResults] = useState<LabResult[]>([])
+  const [recentActivity, setRecentActivity] = useState<any[]>([])
 
   useEffect(() => {
-    checkAuthentication()
-  }, [router])
+    checkAuthStatus()
+  }, [])
 
-  async function checkAuthentication() {
+  async function checkAuthStatus() {
     try {
       const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
       
-      // Check if user is authenticated
-      const { data: { user }, error: authError } = await supabase.auth.getUser()
-      
-      if (authError || !user) {
-        // Redirect to login if not authenticated
-        router.push('/start-case')
+      if (!user) {
+        router.push('/signin')
         return
       }
 
-      // Get user profile
-      const { data: profileData, error: profileError } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', user.id)
-        .single()
-
-      if (profileError) {
-        // Redirect to profile creation if no profile exists
-        router.push('/start-case')
-        return
-      }
-
-      // Check if user is a patient
-      if (profileData.role !== 'patient') {
-        setError('Access denied. This portal is for patients only.')
-        setAuthChecked(true)
-        return
-      }
-
-      setProfile(profileData)
+      setUser(user)
       await fetchPatientData(user.id)
-      setAuthChecked(true)
-
-    } catch (err: any) {
-      console.error('Authentication error:', err)
-      setError('Authentication failed. Please sign in again.')
-      setAuthChecked(true)
-    } finally {
-      setLoading(false)
+    } catch (error) {
+      console.error('Auth check error:', error)
+      router.push('/signin')
     }
   }
 
@@ -123,97 +151,94 @@ export default function PatientDashboard() {
     try {
       const supabase = createClient()
       
-      // Get patient record
-      const { data: patient, error: patientError } = await supabase
-        .from('patients')
+      // Fetch profile
+      const { data: profileData, error: profileError } = await supabase
+        .from('profiles')
         .select('*')
-        .eq('profile_id', userId)
+        .eq('id', userId)
         .single()
 
-      if (patientError) {
-        console.log('No patient record found, creating one...')
-        // Create patient record if it doesn't exist
-        const { error: createError } = await supabase
-          .from('patients')
-          .insert({
-            profile_id: userId
-          })
-        
-        if (createError) throw createError
+      if (profileError) {
+        console.error('Profile fetch error:', profileError)
+      } else {
+        setProfile(profileData)
       }
 
-      // Fetch real medical records from database
-      const { data: records, error: recordsError } = await supabase
+      // Fetch medical records
+      const { data: recordsData } = await supabase
         .from('medical_records')
-        .select(`
-          *,
-          doctor:profiles!medical_records_doctor_id_fkey(full_name)
-        `)
+        .select('*')
         .eq('patient_id', userId)
         .order('created_at', { ascending: false })
+        .limit(10)
 
-      if (recordsError) {
-        console.log('No medical records table found, using empty array')
-        setMedicalRecords([])
-      } else {
-        setMedicalRecords(records || [])
+      if (recordsData) {
+        setMedicalRecords(recordsData)
       }
 
-      // Fetch real appointments from database
-      const { data: appointments, error: appointmentsError } = await supabase
+      // Fetch appointments
+      const { data: appointmentsData } = await supabase
         .from('appointments')
-        .select(`
-          *,
-          doctor:profiles!appointments_doctor_id_fkey(full_name)
-        `)
+        .select('*')
         .eq('patient_id', userId)
-        .eq('status', 'scheduled')
-        .order('appointment_date', { ascending: true })
+        .order('date', { ascending: false })
+        .limit(5)
 
-      if (appointmentsError) {
-        console.log('No appointments table found, using empty array')
-        setAppointments([])
-      } else {
-        setAppointments(appointments || [])
+      if (appointmentsData) {
+        setAppointments(appointmentsData)
       }
 
-    } catch (err: any) {
-      console.error('Error fetching patient data:', err)
-      setError('Failed to load medical records')
+      // Fetch prescriptions
+      const { data: prescriptionsData } = await supabase
+        .from('prescriptions')
+        .select('*')
+        .eq('patient_id', userId)
+        .order('prescribed_date', { ascending: false })
+        .limit(5)
+
+      if (prescriptionsData) {
+        setPrescriptions(prescriptionsData)
+      }
+
+      // Fetch lab results
+      const { data: labData } = await supabase
+        .from('lab_results')
+        .select('*')
+        .eq('patient_id', userId)
+        .order('date', { ascending: false })
+        .limit(5)
+
+      if (labData) {
+        setLabResults(labData)
+      }
+
+    } catch (error) {
+      console.error('Error fetching patient data:', error)
+    } finally {
+      setLoading(false)
     }
   }
 
-  const getAppointmentStatusColor = (status: string) => {
-    switch (status) {
-      case 'Scheduled': return 'bg-blue-100 text-blue-800'
-      case 'Completed': return 'bg-green-100 text-green-800'
-      case 'Cancelled': return 'bg-red-100 text-red-800'
-      case 'Rescheduled': return 'bg-yellow-100 text-yellow-800'
-      default: return 'bg-gray-100 text-gray-800'
+  const handleSignOut = async () => {
+    try {
+      const supabase = createClient()
+      await supabase.auth.signOut()
+      router.push('/')
+    } catch (error) {
+      console.error('Sign out error:', error)
     }
   }
 
-  const getRecordTypeIcon = (type: string) => {
-    switch (type) {
-      case 'General Checkup': return <Stethoscope className="w-5 h-5" />
-      case 'Dental': return <Activity className="w-5 h-5" />
-      case 'Lab Results': return <FileText className="w-5 h-5" />
-      case 'Prescription': return <Pill className="w-5 h-5" />
-      default: return <FileText className="w-5 h-5" />
-    }
-  }
-
-  // Show loading while checking authentication
-  if (loading || !authChecked) {
+  if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-slate-50">
         <TopUtilityBar />
-        <Navigation />
+        <AuthenticatedNavigation userRole="patient" />
         <div className="pt-32 pb-16">
-          <div className="max-w-6xl mx-auto px-6">
+          <div className="max-w-7xl mx-auto px-6">
             <div className="text-center">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-              <p className="text-lg text-gray-600">Checking authentication...</p>
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#145263] mx-auto mb-4"></div>
+              <p className="text-lg text-slate-600">Loading your dashboard...</p>
             </div>
           </div>
         </div>
@@ -221,284 +246,303 @@ export default function PatientDashboard() {
     )
   }
 
-  return (
-    <AuthGuard requiredRole="patient">
-      <div className="min-h-screen bg-gray-50">
+  if (!user || !profile) {
+    return (
+      <div className="min-h-screen bg-slate-50">
         <TopUtilityBar />
-        <Navigation />
-      
-      <div className="pt-32 pb-16">
-        <div className="max-w-6xl mx-auto px-6">
-          {error && (
-            <div className="mb-6 p-4 bg-red-50 border border-red-400 text-red-700 rounded">
-              <p><strong>Error:</strong> {error}</p>
-            </div>
-          )}
-
-          {/* Personalized Patient Profile Header */}
-          <div className="mb-8">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
-                  <User className="w-8 h-8 text-blue-600" />
-                </div>
-                <div>
-                  <h1 className="heading-2 text-slate-900">Welcome back, {profile?.full_name || 'Patient'}! 👋</h1>
-                  <p className="body text-gray-600">Your personal medical records and health dashboard</p>
-                </div>
+        <AuthenticatedNavigation userRole="patient" />
+        <div className="pt-32 pb-16">
+          <div className="max-w-7xl mx-auto px-6">
+            <div className="text-center">
+              <div className="w-32 h-32 bg-gradient-to-br from-[#FECA58]/20 to-[#145263]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                <User className="w-16 h-16 text-[#145263]" />
               </div>
-              <div className="text-right">
-                <div className="body-small text-gray-500">Logged in as</div>
-                <div className="body font-semibold text-slate-900">{profile?.email}</div>
-                <div className="flex items-center gap-2 mt-2">
-                  <div className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                    Patient Portal
-                  </div>
-                  <button
-                    onClick={async () => {
-                      const supabase = createClient()
-                      await supabase.auth.signOut()
-                      router.push('/')
-                    }}
-                    className="text-xs text-gray-500 hover:text-red-600 transition-colors"
-                  >
-                    Logout
-                  </button>
-                </div>
-              </div>
+              <h3 className="heading-3 text-slate-900 mb-3">Profile Not Found</h3>
+              <p className="description-text text-slate-600 mb-8 max-w-md mx-auto">
+                We couldn't find your patient profile. Please contact support or try signing in again.
+              </p>
+              <Button 
+                onClick={() => router.push('/signin')}
+                className="bg-[#145263] hover:bg-[#0F3A47] text-white px-8 py-3 rounded-xl button-text transition-all duration-200"
+              >
+                Sign In Again
+              </Button>
             </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
-            <Link href="/teleconsultation">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardBody className="text-center p-6">
-                  <Video className="w-8 h-8 text-blue-600 mx-auto mb-3" />
-                  <h3 className="font-semibold text-slate-900 mb-1">Teleconsultation</h3>
-                  <p className="text-sm text-gray-600">Video call with doctors</p>
-                </CardBody>
-              </Card>
-            </Link>
-            <Link href="/start-case">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardBody className="text-center p-6">
-                  <Upload className="w-8 h-8 text-green-600 mx-auto mb-3" />
-                  <h3 className="font-semibold text-slate-900 mb-1">Upload Records</h3>
-                  <p className="text-sm text-gray-600">Add medical documents</p>
-                </CardBody>
-              </Card>
-            </Link>
-            <Link href="/appointments">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardBody className="text-center p-6">
-                  <Calendar className="w-8 h-8 text-purple-600 mx-auto mb-3" />
-                  <h3 className="font-semibold text-slate-900 mb-1">Book Appointment</h3>
-                  <p className="text-sm text-gray-600">Schedule consultations</p>
-                </CardBody>
-              </Card>
-            </Link>
-            <Link href="/patient/history">
-              <Card className="hover:shadow-lg transition-shadow cursor-pointer">
-                <CardBody className="text-center p-6">
-                  <History className="w-8 h-8 text-orange-600 mx-auto mb-3" />
-                  <h3 className="font-semibold text-slate-900 mb-1">Medical History</h3>
-                  <p className="text-sm text-gray-600">View past records</p>
-                </CardBody>
-              </Card>
-            </Link>
-          </div>
-
-          {/* Main Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {/* Medical Records Section */}
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <div className="flex items-center justify-between">
-                    <h2 className="text-xl font-bold text-slate-900">Medical Records</h2>
-                    <Button variant="outline" size="sm" icon={Plus}>
-                      Add Record
-                    </Button>
-                  </div>
-                </CardHeader>
-                <CardBody>
-                  {medicalRecords.length === 0 ? (
-                    <div className="text-center py-8">
-                      <FileText className="w-12 h-12 text-gray-300 mx-auto mb-4" />
-                      <h3 className="font-semibold text-gray-900 mb-2">No Medical Records Yet</h3>
-                      <p className="text-gray-600 text-sm mb-4">
-                        {profile?.full_name ? `${profile.full_name}, ` : ''}upload your medical documents to get started with your health journey
-                      </p>
-                      <Button size="sm" icon={Upload}>
-                        Upload Records
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-4">
-                      {medicalRecords.map((record) => (
-                        <div key={record.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow">
-                          <div className="flex items-start gap-3">
-                            <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                              {getRecordTypeIcon(record.type)}
-                            </div>
-                            <div className="flex-1">
-                              <div className="flex items-center justify-between mb-2">
-                                <h3 className="font-semibold text-slate-900">{record.title}</h3>
-                                <span className="text-sm text-gray-500">{record.date}</span>
-                              </div>
-                              <p className="text-sm text-gray-600 mb-2">
-                                <strong>Doctor:</strong> {record.doctor}
-                              </p>
-                              <p className="text-sm text-gray-700 mb-3">{record.notes}</p>
-                              {record.files.length > 0 && (
-                                <div className="flex items-center gap-2">
-                                  <FileImage className="w-4 h-4 text-gray-400" />
-                                  <span className="text-sm text-gray-600">
-                                    {record.files.length} file(s)
-                                  </span>
-                                  <Button variant="ghost" size="sm" icon={Download}>
-                                    Download
-                                  </Button>
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardBody>
-              </Card>
-            </div>
-
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Upcoming Appointments */}
-              <Card>
-                <CardHeader>
-                  <h3 className="text-lg font-semibold text-slate-900">Upcoming Appointments</h3>
-                </CardHeader>
-                <CardBody>
-                  {appointments.length === 0 ? (
-                    <div className="text-center py-6">
-                      <Calendar className="w-8 h-8 text-gray-300 mx-auto mb-3" />
-                      <p className="text-sm text-gray-600 mb-3">
-                        {profile?.full_name ? `${profile.full_name}, ` : ''}you don't have any scheduled appointments yet
-                      </p>
-                      <Button size="sm" icon={Plus}>
-                        Book Appointment
-                      </Button>
-                    </div>
-                  ) : (
-                    <div className="space-y-3">
-                      {appointments.map((appointment) => (
-                        <div key={appointment.id} className="border border-gray-200 rounded-lg p-3">
-                          <div className="flex items-center justify-between mb-2">
-                            <h4 className="font-medium text-slate-900">{appointment.type}</h4>
-                            <span className={`px-2 py-1 rounded-full text-xs font-medium ${getAppointmentStatusColor(appointment.status)}`}>
-                              {appointment.status}
-                            </span>
-                          </div>
-                          <p className="text-sm text-gray-600 mb-1">
-                            <strong>Doctor:</strong> {appointment.doctor}
-                          </p>
-                          <p className="text-sm text-gray-600">
-                            <strong>Date:</strong> {appointment.date} at {appointment.time}
-                          </p>
-                          {appointment.type === 'Teleconsultation' && (
-                            <Button size="sm" className="w-full mt-2" icon={Video}>
-                              Join Call
-                            </Button>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </CardBody>
-              </Card>
-
-              {/* Health Summary */}
-              <Card>
-                <CardHeader>
-                  <h3 className="text-lg font-semibold text-slate-900">Health Summary</h3>
-                </CardHeader>
-                <CardBody>
-                  <div className="space-y-4">
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Last Checkup</span>
-                      <span className="text-sm font-medium">Jan 15, 2024</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Blood Pressure</span>
-                      <span className="text-sm font-medium text-green-600">Normal</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">Weight</span>
-                      <span className="text-sm font-medium">70 kg</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-gray-600">BMI</span>
-                      <span className="text-sm font-medium text-green-600">22.5</span>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-
-              {/* Quick Actions */}
-              <Card>
-                <CardHeader>
-                  <h3 className="text-lg font-semibold text-slate-900">Quick Actions</h3>
-                </CardHeader>
-                <CardBody>
-                  <div className="space-y-3">
-                    <Button variant="outline" className="w-full" icon={Phone}>
-                      Emergency Contact
-                    </Button>
-                    <Button variant="outline" className="w-full" icon={Settings}>
-                      Account Settings
-                    </Button>
-                    <Button variant="outline" className="w-full" icon={Download}>
-                      Download Records
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
-            </div>
-          </div>
-
-          {/* Health Statistics */}
-          <div className="mt-12 grid grid-cols-1 md:grid-cols-4 gap-6">
-            <Card>
-              <CardBody className="text-center">
-                <div className="text-2xl font-bold text-blue-600 mb-1">{medicalRecords.length}</div>
-                <div className="text-sm text-gray-600">Medical Records</div>
-              </CardBody>
-            </Card>
-            <Card>
-              <CardBody className="text-center">
-                <div className="text-2xl font-bold text-green-600 mb-1">{appointments.length}</div>
-                <div className="text-sm text-gray-600">Upcoming Appointments</div>
-              </CardBody>
-            </Card>
-            <Card>
-              <CardBody className="text-center">
-                <div className="text-2xl font-bold text-purple-600 mb-1">2</div>
-                <div className="text-sm text-gray-600">Teleconsultations</div>
-              </CardBody>
-            </Card>
-            <Card>
-              <CardBody className="text-center">
-                <div className="text-2xl font-bold text-orange-600 mb-1">5</div>
-                <div className="text-sm text-gray-600">Documents Uploaded</div>
-              </CardBody>
-            </Card>
           </div>
         </div>
       </div>
+    )
+  }
 
-        <Footer />
+  const tabs = [
+    { id: 'overview', label: 'Overview', icon: Activity },
+    { id: 'records', label: 'Medical Records', icon: FileText },
+    { id: 'appointments', label: 'Appointments', icon: Calendar },
+    { id: 'prescriptions', label: 'Prescriptions', icon: Pill },
+    { id: 'lab-results', label: 'Lab Results', icon: Stethoscope },
+    { id: 'teleconsultation', label: 'Teleconsultation', icon: Video },
+    { id: 'profile', label: 'Profile', icon: User }
+  ]
+
+  const quickActions = [
+    {
+      title: 'Book Appointment',
+      description: 'Schedule a consultation with specialists',
+      icon: Calendar,
+      color: 'bg-[#FECA58]',
+      href: '/patient/appointments/book'
+    },
+    {
+      title: 'Upload Documents',
+      description: 'Add medical reports and images',
+      icon: Upload,
+      color: 'bg-[#145263]',
+      href: '/patient/documents/upload'
+    },
+    {
+      title: 'Request Prescription',
+      description: 'Request medication refills',
+      icon: Pill,
+      color: 'bg-[#FECA58]',
+      href: '/patient/prescriptions/request'
+    },
+    {
+      title: 'Emergency Contact',
+      description: 'Get immediate medical assistance',
+      icon: AlertCircle,
+      color: 'bg-red-500',
+      href: '/patient/emergency'
+    }
+  ]
+
+  return (
+    <div className="min-h-screen bg-slate-50">
+      <TopUtilityBar />
+      <AuthenticatedNavigation userRole="patient" userName={profile?.full_name} />
+      
+      <div className="pt-32">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          {/* Integrated Welcome Header with Navigation */}
+          <div className="rounded-lg p-3 shadow-sm border mb-4" style={{ backgroundColor: '#F8FAFC', borderColor: '#2A4049' }}>
+            {/* Welcome Section */}
+            <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-3">
+              <div>
+                <h1 className="heading-4 text-slate-900 mb-1">Welcome back, {profile.full_name}</h1>
+                <p className="body-small text-slate-600">
+                  Manage your health records, appointments, and medical care
+                </p>
+              </div>
+              <div className="mt-3 lg:mt-0 flex items-center gap-3">
+                <Button 
+                  onClick={() => router.push('/start-case')}
+                  className="text-white font-semibold text-sm px-4 py-2"
+                  style={{ backgroundColor: '#2A4049' }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1F2F35'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#2A4049'}
+                >
+                  <Plus className="w-3 h-3 mr-1" />
+                  New Case
+                </Button>
+              </div>
+            </div>
+
+            {/* Navigation Tabs */}
+            <div className="flex flex-wrap gap-2 p-1 bg-white rounded-lg border border-[#FECA58]/20">
+            {tabs.map((tab) => {
+              const Icon = tab.icon
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-4 py-3 rounded-lg font-medium transition-all duration-200 ${
+                    activeTab === tab.id
+                      ? 'bg-[#145263] text-white shadow-sm'
+                      : 'text-slate-600 hover:text-[#145263] hover:bg-[#FFF3D4]'
+                  }`}
+                >
+                  <Icon className="w-4 h-4" />
+                  {tab.label}
+                </button>
+              )
+            })}
+            </div>
+          </div>
+
+        {/* Overview Tab */}
+        {activeTab === 'overview' && (
+          <div className="space-y-4">
+            {/* Quick Actions */}
+            <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                {quickActions.map((action, index) => {
+                  const Icon = action.icon
+                  return (
+                    <Link key={index} href={action.href}>
+                      <div className="bg-white rounded-2xl border border-[#FECA58]/20 shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-300 p-4 group cursor-pointer h-32 flex items-center">
+                        <div className={`w-12 h-12 ${action.color} rounded-xl flex items-center justify-center flex-shrink-0 mr-4 group-hover:scale-110 transition-transform duration-200`}>
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="card-title text-black mb-1 text-sm font-semibold">{action.title}</h3>
+                          <p className="body-small text-black leading-tight opacity-80">{action.description}</p>
+                        </div>
+                      </div>
+                    </Link>
+                  )
+                })}
+              </div>
+            </div>
+
+            {/* Recent Activity */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+              {/* Upcoming Appointments */}
+              <Card className="bg-white rounded-2xl border border-[#FECA58]/20 shadow-lg">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#FECA58] rounded-lg flex items-center justify-center">
+                      <Calendar className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="card-title text-slate-900">Upcoming Appointments</h3>
+                      <p className="body-small text-slate-600">Your scheduled consultations</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardBody>
+                  {appointments.length > 0 ? (
+                    <div className="space-y-4">
+                      {appointments.slice(0, 3).map((appointment) => (
+                        <div key={appointment.id} className="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
+                          <div className="w-10 h-10 bg-[#145263] rounded-lg flex items-center justify-center">
+                            <Stethoscope className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-slate-900">{appointment.doctor_name}</h4>
+                            <p className="text-sm text-slate-600">{appointment.specialty}</p>
+                            <p className="text-xs text-slate-500">{appointment.date} at {appointment.time}</p>
+                          </div>
+                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            appointment.status === 'scheduled' ? 'bg-[#FECA58] text-[#145263]' : 'bg-green-100 text-green-800'
+                          }`}>
+                            {appointment.status}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Calendar className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                      <p className="body text-slate-600">No upcoming appointments</p>
+                      <Button 
+                        className="mt-4 bg-[#145263] hover:bg-[#0F3A47] text-white"
+                        onClick={() => setActiveTab('appointments')}
+                      >
+                        Book Appointment
+                      </Button>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+
+              {/* Active Prescriptions */}
+              <Card className="bg-white rounded-2xl border border-[#FECA58]/20 shadow-lg">
+                <CardHeader className="pb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 bg-[#145263] rounded-lg flex items-center justify-center">
+                      <Pill className="w-5 h-5 text-white" />
+                    </div>
+                    <div>
+                      <h3 className="card-title text-slate-900">Active Prescriptions</h3>
+                      <p className="body-small text-slate-600">Your current medications</p>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardBody>
+                  {prescriptions.length > 0 ? (
+                    <div className="space-y-4">
+                      {prescriptions.slice(0, 3).map((prescription) => (
+                        <div key={prescription.id} className="flex items-center gap-4 p-3 bg-slate-50 rounded-lg">
+                          <div className="w-10 h-10 bg-[#FECA58] rounded-lg flex items-center justify-center">
+                            <Pill className="w-5 h-5 text-white" />
+                          </div>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-slate-900">{prescription.medication_name}</h4>
+                            <p className="text-sm text-slate-600">{prescription.dosage} - {prescription.frequency}</p>
+                            <p className="text-xs text-slate-500">Dr. {prescription.doctor_name}</p>
+                          </div>
+                          <div className={`px-2 py-1 rounded-full text-xs font-medium ${
+                            prescription.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-slate-100 text-slate-600'
+                          }`}>
+                            {prescription.status}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="text-center py-8">
+                      <Pill className="w-12 h-12 text-slate-300 mx-auto mb-4" />
+                      <p className="body text-slate-600">No active prescriptions</p>
+                    </div>
+                  )}
+                </CardBody>
+              </Card>
+            </div>
+
+            {/* Health Summary */}
+            <Card className="bg-white rounded-2xl border border-[#FECA58]/20 shadow-lg">
+              <CardHeader>
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 bg-[#145263] rounded-lg flex items-center justify-center">
+                    <Heart className="w-5 h-5 text-white" />
+                  </div>
+                  <div>
+                    <h3 className="card-title text-slate-900">Health Summary</h3>
+                    <p className="body-small text-slate-600">Your medical overview</p>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardBody>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                  <div className="text-center p-4 bg-[#FFF3D4] rounded-xl">
+                    <div className="text-2xl font-bold text-[#145263] mb-1">{medicalRecords.length}</div>
+                    <div className="text-sm text-slate-600">Medical Records</div>
+                  </div>
+                  <div className="text-center p-4 bg-[#FFF3D4] rounded-xl">
+                    <div className="text-2xl font-bold text-[#145263] mb-1">{appointments.length}</div>
+                    <div className="text-sm text-slate-600">Total Appointments</div>
+                  </div>
+                  <div className="text-center p-4 bg-[#FFF3D4] rounded-xl">
+                    <div className="text-2xl font-bold text-[#145263] mb-1">{prescriptions.length}</div>
+                    <div className="text-sm text-slate-600">Prescriptions</div>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        )}
+
+        {/* Other tabs content would go here - Medical Records, Appointments, etc. */}
+        {activeTab !== 'overview' && (
+          <div className="text-center py-16">
+            <div className="w-32 h-32 bg-gradient-to-br from-[#FECA58]/20 to-[#145263]/10 rounded-full flex items-center justify-center mx-auto mb-6">
+              <FileText className="w-16 h-16 text-[#145263]" />
+            </div>
+            <h3 className="heading-3 text-slate-900 mb-3">{tabs.find(t => t.id === activeTab)?.label} Section</h3>
+            <p className="description-text text-slate-600 mb-8 max-w-md mx-auto">
+              This section is under development. Full functionality will be available soon.
+            </p>
+            <Button 
+              onClick={() => setActiveTab('overview')}
+              className="bg-[#145263] hover:bg-[#0F3A47] text-white px-8 py-3 rounded-xl button-text transition-all duration-200"
+            >
+              Back to Overview
+            </Button>
+          </div>
+        )}
+        </div>
       </div>
-    </AuthGuard>
+
+      <Footer />
+    </div>
   )
 }

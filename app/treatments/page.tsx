@@ -116,7 +116,7 @@ export default function TreatmentsSupabasePage() {
         
         {/* Header Bar */}
         <div className="pt-32">
-          <div className="bg-[#2A4049] py-16">
+          <div className="bg-[#2A4049] py-10">
             <div className="max-w-6xl mx-auto px-6 text-center">
               <h1 className="hero-text text-white mb-6 drop-shadow-lg">Medical Treatments</h1>
               <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
@@ -127,7 +127,7 @@ export default function TreatmentsSupabasePage() {
           </div>
         </div>
         
-        <div className="py-16">
+        <div className="py-12">
           <div className="max-w-6xl mx-auto px-6">
             <div className="text-center">
               <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
@@ -147,7 +147,7 @@ export default function TreatmentsSupabasePage() {
         
         {/* Header Bar */}
         <div className="pt-32">
-          <div className="bg-[#2A4049] py-16">
+          <div className="bg-[#2A4049] py-10">
             <div className="max-w-6xl mx-auto px-6 text-center">
               <h1 className="hero-text text-white mb-6 drop-shadow-lg">Medical Treatments</h1>
               <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
@@ -158,7 +158,7 @@ export default function TreatmentsSupabasePage() {
           </div>
         </div>
         
-        <div className="py-16">
+        <div className="py-12">
           <div className="max-w-6xl mx-auto px-6">
             <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
               <p><strong>Error:</strong> {error}</p>
@@ -179,7 +179,7 @@ export default function TreatmentsSupabasePage() {
       
       {/* Header Bar */}
       <div className="pt-32">
-        <div className="bg-[#2A4049] py-16">
+        <div className="bg-[#2A4049] py-10">
           <div className="max-w-4xl mx-auto px-6 text-center">
             <h1 className="hero-text text-white mb-6 drop-shadow-lg">Medical Treatments</h1>
             <p className="description-text text-white max-w-3xl mx-auto drop-shadow-md">
@@ -191,7 +191,7 @@ export default function TreatmentsSupabasePage() {
       </div>
 
       {/* Search and Filters */}
-      <section className="py-12 bg-white/80 backdrop-blur-sm border-b border-[#ADC8A6]/20">
+      <section className="py-6 bg-white/80 backdrop-blur-sm border-b border-[#ADC8A6]/20">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex flex-col lg:flex-row gap-6 items-center">
             {/* Search Bar */}
@@ -236,7 +236,7 @@ export default function TreatmentsSupabasePage() {
       </section>
 
       {/* Treatments Grid */}
-      <section className="py-20 bg-gradient-to-br from-[#ADC8A6]/5 via-white to-[#2A4049]/5 relative overflow-hidden">
+      <section className="py-12 bg-gradient-to-br from-[#ADC8A6]/5 via-white to-[#2A4049]/5 relative overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_20%_30%,rgba(173,200,166,0.08)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(42,64,73,0.05)_0%,transparent_50%)]"></div>
         {/* Floating Elements */}
@@ -244,7 +244,7 @@ export default function TreatmentsSupabasePage() {
         <div className="absolute bottom-16 right-20 w-36 h-36 bg-[#2A4049]/10 rounded-full blur-xl"></div>
         
         <div className="max-w-7xl mx-auto px-6 relative z-10">
-          <div className="text-center mb-16">
+          <div className="text-center mb-6">
             <h2 className="section-title text-slate-900 mb-4">
               Available Treatments
             </h2>
@@ -254,7 +254,7 @@ export default function TreatmentsSupabasePage() {
           </div>
 
           {filteredTreatments.length === 0 ? (
-            <div className="text-center py-16">
+            <div className="text-center py-12">
               <div className="w-32 h-32 bg-gradient-to-br from-[#ADC8A6]/20 to-[#2A4049]/10 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Search className="w-16 h-16 text-[#2A4049]" />
               </div>
@@ -362,9 +362,9 @@ export default function TreatmentsSupabasePage() {
       </section>
 
       {/* Features Section - Compact & Material */}
-      <section className="py-12 bg-white">
+      <section className="py-8 bg-white">
         <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-8">
+          <div className="text-center mb-6">
             <h2 className="text-2xl font-semibold text-slate-900 mb-2">
               Why Choose Our Treatments?
             </h2>
@@ -399,7 +399,7 @@ export default function TreatmentsSupabasePage() {
             </div>
 
             <div className="group flex items-start gap-4 p-4 rounded-lg hover:bg-slate-50 transition-all duration-200">
-              <div className="w-10 h-10 bg-[#145263] rounded-lg flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 bg-[#2A4049] rounded-lg flex items-center justify-center flex-shrink-0">
                 <DollarSign className="w-5 h-5 text-white" />
               </div>
               <div>
