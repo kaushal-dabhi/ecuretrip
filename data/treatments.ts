@@ -6,6 +6,7 @@ export interface Treatment {
   description?: string
   duration_days?: number
   hospital_name?: string
+  currency?: string
 }
 
 export const TREATMENTS: Treatment[] = [
@@ -16,7 +17,8 @@ export const TREATMENTS: Treatment[] = [
     category: 'Radiology',
     description: 'High-resolution MRI scan of the brain for diagnostic purposes',
     duration_days: 1,
-    hospital_name: 'Apollo Hospitals'
+    hospital_name: 'Apollo Hospitals',
+    currency: 'INR'
   },
   {
     id: '2',
@@ -25,7 +27,8 @@ export const TREATMENTS: Treatment[] = [
     category: 'Radiology',
     description: 'Comprehensive CT scan of the chest for lung and heart evaluation',
     duration_days: 1,
-    hospital_name: 'Apollo Hospitals'
+    hospital_name: 'Apollo Hospitals',
+    currency: 'INR'
   },
   {
     id: '3',
@@ -34,7 +37,8 @@ export const TREATMENTS: Treatment[] = [
     category: 'Pediatrics',
     description: 'Complete pediatric health examination and consultation',
     duration_days: 1,
-    hospital_name: 'Fortis Healthcare'
+    hospital_name: 'Fortis Healthcare',
+    currency: 'INR'
   },
   {
     id: '4',
@@ -43,7 +47,8 @@ export const TREATMENTS: Treatment[] = [
     category: 'Pediatrics',
     description: 'Comprehensive vaccination schedule for children',
     duration_days: 1,
-    hospital_name: 'Fortis Healthcare'
+    hospital_name: 'Fortis Healthcare',
+    currency: 'INR'
   },
   {
     id: '5',
@@ -52,7 +57,8 @@ export const TREATMENTS: Treatment[] = [
     category: 'Radiology',
     description: 'Detailed ultrasound examination of abdominal organs',
     duration_days: 1,
-    hospital_name: 'Apollo Hospitals'
+    hospital_name: 'Apollo Hospitals',
+    currency: 'INR'
   },
   {
     id: '6',
@@ -61,6 +67,7 @@ export const TREATMENTS: Treatment[] = [
     category: 'Pediatrics',
     description: 'Comprehensive assessment of child growth and development',
     duration_days: 1,
-    hospital_name: 'Fortis Healthcare'
+    hospital_name: 'Fortis Healthcare',
+    currency: 'INR'
   }
 ]

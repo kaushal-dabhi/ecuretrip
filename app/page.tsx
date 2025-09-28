@@ -7,7 +7,6 @@ import TopUtilityBar from '@/components/TopUtilityBar'
 import Navigation from '@/components/Navigation'
 import Hero from '@/components/Hero';
 import { REVIEWS } from '@/data/reviews';
-import { TREATMENTS } from '@/data/treatments';
 import { trackTeleconsultBooked } from '@/lib/analytics';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation'
@@ -46,7 +45,12 @@ export default function Home() {
           setFeaturedPackages(data)
         } else {
           // Use static data as fallback when database is empty
-          setFeaturedPackages(TREATMENTS.slice(0, 4))
+          setFeaturedPackages([
+            { id: '1', name: 'MRI Brain Scan', base_price: 15000, category: 'Radiology', description: 'High-resolution MRI scan of the brain', duration_days: 1, hospital_name: 'Apollo Hospitals', currency: 'INR' },
+            { id: '2', name: 'CT Scan Chest', base_price: 8000, category: 'Radiology', description: 'Comprehensive CT scan of the chest', duration_days: 1, hospital_name: 'Apollo Hospitals', currency: 'INR' },
+            { id: '3', name: 'Pediatric Health Checkup', base_price: 2500, category: 'Pediatrics', description: 'Complete pediatric health examination', duration_days: 1, hospital_name: 'Fortis Healthcare', currency: 'INR' },
+            { id: '4', name: 'Pediatric Vaccination Package', base_price: 5000, category: 'Pediatrics', description: 'Comprehensive vaccination schedule', duration_days: 1, hospital_name: 'Fortis Healthcare', currency: 'INR' }
+          ])
         }
       } catch (err) {
         console.error('Error:', err)
