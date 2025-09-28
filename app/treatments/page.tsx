@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
 import { Treatment } from '@/types/database'
+import { TREATMENTS } from '@/data/treatments'
 import { Card, CardHeader, CardBody, CardFooter } from '@/components/ui/Card'
 import Button from '@/components/ui/Button'
 import { 
@@ -44,8 +45,14 @@ export default function TreatmentsSupabasePage() {
         if (error) {
           setError(error.message)
         } else {
-          setTreatments(data || [])
-          setFilteredTreatments(data || [])
+          if (data && data.length > 0) {
+            setTreatments(data)
+            setFilteredTreatments(data)
+          } else {
+            // Use static data as fallback when database is empty
+            setTreatments(TREATMENTS)
+            setFilteredTreatments(TREATMENTS)
+          }
         }
       } catch (err) {
         setError('Failed to fetch treatments')

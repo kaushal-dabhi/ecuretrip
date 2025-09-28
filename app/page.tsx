@@ -7,6 +7,7 @@ import TopUtilityBar from '@/components/TopUtilityBar'
 import Navigation from '@/components/Navigation'
 import Hero from '@/components/Hero';
 import { REVIEWS } from '@/data/reviews';
+import { TREATMENTS } from '@/data/treatments';
 import { trackTeleconsultBooked } from '@/lib/analytics';
 import Footer from '@/components/Footer';
 import { useRouter } from 'next/navigation'
@@ -41,8 +42,11 @@ export default function Home() {
           return
         }
 
-        if (data) {
+        if (data && data.length > 0) {
           setFeaturedPackages(data)
+        } else {
+          // Use static data as fallback when database is empty
+          setFeaturedPackages(TREATMENTS.slice(0, 4))
         }
       } catch (err) {
         console.error('Error:', err)
