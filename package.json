@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
-    "build": "prisma generate && next build",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "test": "vitest",
@@ -13,11 +13,14 @@
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
     "db:seed": "tsx prisma/seed.ts",
-    "postinstall": "prisma generate",
+    "postinstall": "echo 'No postinstall tasks needed'",
     "emr:setup": "tsx scripts/emr-setup.ts",
     "emr:seed": "tsx scripts/emr-seed.ts",
     "pacs:setup": "tsx scripts/pacs-setup.ts",
-    "create-sample-doctors": "tsx scripts/create-sample-doctors.ts"
+    "cleanup-dummy-data": "tsx scripts/cleanup-dummy-data.ts",
+    "remove-remaining-dummy": "tsx scripts/remove-remaining-dummy-data.ts",
+    "add-specific-doctors": "tsx scripts/add-specific-doctors.ts",
+    "add-sample-treatments": "tsx scripts/add-sample-treatments.ts"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",
@@ -57,7 +60,7 @@
     "tailwind-merge": "^2.6.0",
     "tesseract.js": "^4.1.1",
     "uuid": "^9.0.1",
-    "zod": "^4.1.8",
+    "zod": "^3.23.8",
     "zustand": "^5.0.7"
   },
   "devDependencies": {
