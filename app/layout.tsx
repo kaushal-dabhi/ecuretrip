@@ -11,24 +11,24 @@ export const metadata: Metadata = {
   icons: {
     icon: [
       {
-        url: '/uploads/Final E Cure Trip.png',
+        url: 'https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png',
         sizes: '32x32',
         type: 'image/png',
       },
       {
-        url: '/uploads/Final E Cure Trip.png',
+        url: 'https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png',
         sizes: '16x16',
         type: 'image/png',
       },
     ],
     apple: [
       {
-        url: '/uploads/Final E Cure Trip.png',
+        url: 'https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png',
         sizes: '180x180',
         type: 'image/png',
       },
     ],
-    shortcut: '/uploads/Final E Cure Trip.png',
+    shortcut: 'https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png',
   },
   openGraph: {
     title: 'eCureTrip - Medical Tourism Platform',
@@ -73,11 +73,11 @@ export default function RootLayout({
   return (
     <html lang="en" className="scroll-smooth">
       <head>
-        <link rel="icon" type="image/png" sizes="32x32" href="/uploads/Final E Cure Trip.png" />
-        <link rel="icon" type="image/png" sizes="16x16" href="/uploads/Final E Cure Trip.png" />
-        <link rel="apple-touch-icon" sizes="180x180" href="/uploads/Final E Cure Trip.png" />
-        <link rel="shortcut icon" href="/uploads/Final E Cure Trip.png" />
-        <link rel="icon" href="/uploads/Final E Cure Trip.png" type="image/png" />
+        <link rel="icon" type="image/png" sizes="32x32" href="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png" />
+        <link rel="icon" type="image/png" sizes="16x16" href="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png" />
+        <link rel="apple-touch-icon" sizes="180x180" href="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png" />
+        <link rel="shortcut icon" href="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png" />
+        <link rel="icon" href="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png" type="image/png" />
         <link rel="manifest" href="/manifest.json" />
         <meta name="theme-color" content="#2A4049" />
         <meta name="msapplication-TileColor" content="#2A4049" />

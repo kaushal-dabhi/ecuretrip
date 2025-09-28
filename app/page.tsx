@@ -339,7 +339,7 @@ export default function Home() {
             >
               <div className="w-full h-32 relative">
                 <Image
-                  src="/Medical_Specialties_Images/oncology.png"
+                  src="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/medical-specialties/oncology.png"
                   alt="Oncology"
                   fill
                   className="object-cover group-hover:scale-110 transition-transform duration-300"

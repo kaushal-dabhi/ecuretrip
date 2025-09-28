@@ -53,7 +53,7 @@ const team = [
   {
     name: 'Dr. Sarah Johnson',
     role: 'Chief Medical Officer',
-    image: '/Medical_Specialties_Images/oncology.png',
+    image: 'https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/medical-specialties/oncology.png',
     description: '20+ years in international healthcare'
   },
   {

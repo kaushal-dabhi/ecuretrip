@@ -281,17 +281,13 @@ export default function TreatmentsSupabasePage() {
                     {/* Left Side - Icon and Basic Info */}
                     <div className="md:w-1/3 flex flex-col items-center justify-center bg-gradient-to-br from-[#ADC8A6]/5 to-[#2A4049]/5">
                       {treatment.category === 'oncology' ? (
-                        <img 
-                          src="/oncology.png" 
-                          alt="Oncology" 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
+                        <div className="w-full h-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white text-4xl">🧬</span>
+                        </div>
                       ) : treatment.category === 'pediatrics' ? (
-                        <img 
-                          src="/pediatric.png" 
-                          alt="Pediatrics" 
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                        />
+                        <div className="w-full h-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                          <span className="text-white text-4xl">👶</span>
+                        </div>
                       ) : (
                         <div className="w-full h-full bg-[#2A4049] flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                           <span className="text-white text-3xl">{getCategoryIcon(treatment.category)}</span>
