@@ -52,9 +52,9 @@ export default function Home() {
             { id: '4', name: 'Pediatric Vaccination Package', base_price: 5000, category: 'Pediatrics', description: 'Comprehensive vaccination schedule', duration_days: 1, hospital_name: 'Fortis Healthcare', currency: 'INR' }
           ])
         }
+        setLoading(false)
       } catch (err) {
         console.error('Error:', err)
-      } finally {
         setLoading(false)
       }
     }
@@ -88,9 +88,9 @@ export default function Home() {
                 { id: '4', name: 'Manipal Hospitals', location: 'Pune', specialties: ['Cardiology', 'Orthopedics'], rating: 4.5, image_url: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=300&fit=crop' }
               ])
             }
+            setHospitalsLoading(false)
           } catch (err) {
             console.error('Error:', err)
-          } finally {
             setHospitalsLoading(false)
           }
         }
@@ -111,9 +111,9 @@ export default function Home() {
         if (result.doctors && result.doctors.length > 0) {
           setFeaturedDoctors(result.doctors.slice(0, 4))
         }
+        setDoctorsLoading(false)
       } catch (err) {
         console.error('Error fetching doctors:', err)
-      } finally {
         setDoctorsLoading(false)
       }
     }
