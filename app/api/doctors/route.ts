@@ -3,6 +3,10 @@ import { NextResponse } from 'next/server'
 
 export async function GET() {
   try {
+    // Debug: Log which database we're connecting to
+    console.log('🔗 Connecting to Supabase URL:', process.env.NEXT_PUBLIC_SUPABASE_URL)
+    console.log('🔑 Has service role key:', !!process.env.SUPABASE_SERVICE_ROLE_KEY)
+    
     // Use service role key for server-side API calls to bypass RLS
     const supabase = createClient(
       process.env.NEXT_PUBLIC_SUPABASE_URL!,
