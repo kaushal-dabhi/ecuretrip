@@ -77,8 +77,16 @@ export default function Home() {
               return
             }
 
-            if (data) {
+            if (data && data.length > 0) {
               setFeaturedHospitals(data)
+            } else {
+              // Use static data as fallback when database is empty
+              setFeaturedHospitals([
+                { id: '1', name: 'Apollo Hospitals', location: 'Mumbai', specialties: ['Radiology', 'Cardiology'], rating: 4.8, image_url: 'https://images.unsplash.com/photo-1586773860418-d37222d8fce3?w=400&h=300&fit=crop' },
+                { id: '2', name: 'Fortis Healthcare', location: 'Delhi', specialties: ['Pediatrics', 'Orthopedics'], rating: 4.7, image_url: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=400&h=300&fit=crop' },
+                { id: '3', name: 'Max Healthcare', location: 'Bangalore', specialties: ['Oncology', 'Neurology'], rating: 4.6, image_url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1f?w=400&h=300&fit=crop' },
+                { id: '4', name: 'Manipal Hospitals', location: 'Pune', specialties: ['Cardiology', 'Orthopedics'], rating: 4.5, image_url: 'https://images.unsplash.com/photo-1538108149393-fbbd81895907?w=400&h=300&fit=crop' }
+              ])
             }
           } catch (err) {
             console.error('Error:', err)
