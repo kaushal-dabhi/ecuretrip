@@ -112,14 +112,14 @@ export default function Hero() {
         </div>
 
                 {/* Right: hero image */}
-        <div className="relative z-10 w-full mt-4 md:w-6/12 md:absolute md:right-4 md:bottom-0 md:h-full md:flex md:items-end md:overflow-hidden md:pt-16 md:mt-0">
+        <div className="relative z-10 w-full mt-4 md:w-5/12 md:absolute md:right-0 md:bottom-0 md:h-full md:flex md:items-end md:overflow-hidden md:pt-20 md:mt-0">
           <Image
             priority
             src="/image__1_-removebg-preview.png"
             alt="Doctor consulting patient in clinic"
-            width={800}
-            height={800}
-                className="w-full h-auto max-h-[250px] md:max-h-[400px] md:w-full md:h-full md:object-contain md:object-right md:object-bottom md:scale-100"
+            width={600}
+            height={600}
+                className="w-full h-auto max-h-[200px] md:max-h-[350px] md:w-full md:h-full md:object-contain md:object-right md:object-bottom"
           />
         </div>
       </div>
