@@ -25,17 +25,15 @@ export default function Navigation() {
             <div className="flex items-center justify-between h-20">
           {/* Logo */}
               <Link href="/" className="flex items-center flex-shrink-0 group">
-                {/* eCureTrip Logo with subtle background highlight */}
-                <div className="relative w-32 h-32 flex items-center justify-center group-hover:scale-105 transition-transform duration-300 bg-white rounded-lg shadow-sm">
-              <Image
-                    src="https://eqjpdytmsohfpohecczz.supabase.co/storage/v1/object/public/icons/image__1_-removebg-preview.png"
-                alt="eCureTrip Logo"
-                    width={128}
-                    height={128}
-                className="w-full h-full object-contain"
-                priority
-              />
-            </div>
+                {/* eCureTrip Logo */}
+                <div className="flex items-center space-x-3 group-hover:scale-105 transition-transform duration-300">
+                  <div className="w-10 h-10 bg-[#2A4049] rounded-lg flex items-center justify-center">
+                    <span className="text-white font-bold text-lg">e</span>
+                  </div>
+                  <div className="text-2xl font-bold text-[#2A4049]">
+                    eCureTrip
+                  </div>
+                </div>
           </Link>
 
           {/* Desktop Navigation - Centered with Optimized Spacing */}

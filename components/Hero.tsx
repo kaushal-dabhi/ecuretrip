@@ -115,7 +115,7 @@ export default function Hero() {
         <div className="relative z-10 w-full mt-4 md:w-5/12 md:absolute md:right-0 md:bottom-0 md:h-full md:flex md:items-end md:overflow-hidden md:pt-20 md:mt-0">
           <Image
             priority
-            src="/image__1_-removebg-preview.png"
+            src="/demo.png"
             alt="Doctor consulting patient in clinic"
             width={600}
             height={600}
