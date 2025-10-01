@@ -20,7 +20,9 @@
     "cleanup-dummy-data": "tsx scripts/cleanup-dummy-data.ts",
     "remove-remaining-dummy": "tsx scripts/remove-remaining-dummy-data.ts",
     "add-specific-doctors": "tsx scripts/add-specific-doctors.ts",
-    "add-sample-treatments": "tsx scripts/add-sample-treatments.ts"
+    "add-sample-treatments": "tsx scripts/add-sample-treatments.ts",
+    "setup-database": "tsx scripts/setup-production-database.ts",
+    "production-setup": "npm run setup-database && npm run add-specific-doctors"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.1",

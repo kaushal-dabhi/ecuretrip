@@ -1,177 +1,78 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import React, { useState } from 'react'
+import { useRouter, useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
-import { Card, CardHeader, CardBody } from '@/components/ui/Card'
-import Button from '@/components/ui/Button'
-import Input from '@/components/ui/Input'
-import { ArrowLeft, Mail, Lock, CheckCircle, AlertCircle, Loader2 } from 'lucide-react'
 import TopUtilityBar from '@/components/TopUtilityBar'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
+import { signInPatient } from '@/lib/auth'
 
-type Step = 'email' | 'success'
-
-export default function SignInPage() {
+export default function SignIn() {
   const router = useRouter()
+  const searchParams = useSearchParams()
+  const redirect = searchParams.get('redirect') || '/patient/dashboard'
   
-  const [step, setStep] = useState<Step>('email')
+  const [formData, setFormData] = useState({
+    email: '',
+    password: ''
+  })
+  
+  const [errors, setErrors] = useState<Record<string, string>>({})
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const [success, setSuccess] = useState<string | null>(null)
-  
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
 
-  async function signIn() {
-    if (!email.trim()) {
-      setError('Please enter your email address')
-      return
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }))
+    
+    // Clear error when user starts typing
+    if (errors[name]) {
+      setErrors(prev => ({
+        ...prev,
+        [name]: ''
+      }))
+    }
+  }
+
+  const validateForm = (): boolean => {
+    const newErrors: Record<string, string> = {}
+
+    if (!formData.email) {
+      newErrors.email = 'Email is required'
     }
 
-    if (!password.trim()) {
-      setError('Please enter your password')
+    if (!formData.password) {
+      newErrors.password = 'Password is required'
+    }
+
+    setErrors(newErrors)
+    return Object.keys(newErrors).length === 0
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    
+    if (!validateForm()) {
       return
     }
 
     setLoading(true)
-    setError(null)
-
+    
     try {
-      const supabase = createClient()
+      await signInPatient(formData.email, formData.password)
       
-      // Use signInWithPassword method for existing users
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: email.trim(),
-        password: password.trim()
+      // Redirect to the intended page or dashboard
+      router.push(redirect)
+    } catch (error: any) {
+      console.error('Sign in error:', error)
+      setErrors({ 
+        general: error.message || 'Sign in failed. Please check your credentials and try again.' 
       })
-
-      if (error) {
-        if (error.message.includes('Invalid login credentials')) {
-          setError('Invalid email or password. Please check your credentials and try again.')
-        } else if (error.message.includes('User not found')) {
-          setError('No account found with this email. Please use "Get Started" to create a new account.')
-        } else {
-          throw error
-        }
-        return
-      }
-
-      setSuccess('Sign in successful! Redirecting...')
-      
-      // Check user profile and redirect to appropriate dashboard
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('id', data.user.id)
-        .single()
-
-      if (profile) {
-        if (profile.role === 'patient') {
-          router.push('/patient/dashboard')
-        } else if (profile.role === 'doctor') {
-          router.push('/doctor/dashboard')
-        } else {
-          router.push('/')
-        }
-      } else {
-        // User exists but no profile - redirect to profile creation
-        router.push('/start-case?step=profile&email=' + encodeURIComponent(email))
-      }
-      
-    } catch (err: any) {
-      setError(err.message || 'Sign in failed. Please try again.')
     } finally {
       setLoading(false)
-    }
-  }
-
-
-  const renderStep = () => {
-    switch (step) {
-      case 'email':
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-                <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#ADC8A6' }}>
-                  <Mail className="w-8 h-8" style={{ color: '#145263' }} />
-              </div>
-                  <h2 className="heading-4 mb-2">Sign In</h2>
-                  <p className="body text-slate-600">
-                    Enter your email and password to sign in to your account
-                  </p>
-            </div>
-
-            <div className="space-y-4">
-              <div>
-                <label className="block label-text mb-2">
-                  Email Address
-                </label>
-                <Input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  icon={Mail}
-                  className="w-full"
-                />
-              </div>
-
-              <div>
-                <label className="block label-text mb-2">
-                  Password
-                </label>
-                <Input
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter your password"
-                  icon={Lock}
-                  className="w-full"
-                />
-              </div>
-
-              <Button
-                onClick={signIn}
-                loading={loading}
-                className="w-full bg-[#145263] hover:bg-[#0F3A47] text-white"
-                size="lg"
-              >
-                Sign In
-              </Button>
-
-              <div className="text-center">
-                <p className="text-sm text-gray-600">
-                  Don't have an account?{' '}
-                  <Link href="/start-case" className="text-[#145263] hover:text-[#0F3A47] font-medium">
-                    Get Started
-                  </Link>
-                </p>
-              </div>
-            </div>
-          </div>
-        )
-
-
-      case 'success':
-        return (
-          <div className="space-y-6">
-            <div className="text-center">
-              <div className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4" style={{ backgroundColor: '#ADC8A6' }}>
-                <CheckCircle className="w-8 h-8" style={{ color: '#145263' }} />
-              </div>
-              <h2 className="heading-4 mb-2">Sign In Successful!</h2>
-              <p className="body text-slate-600">
-                Redirecting you to your dashboard...
-              </p>
-            </div>
-          </div>
-        )
-
-      default:
-        return null
     }
   }
 
@@ -181,46 +82,131 @@ export default function SignInPage() {
       <Navigation />
       
       <div className="pt-32 pb-16">
-        <div className="max-w-2xl mx-auto px-6">
-          <div className="mb-6">
-            <Link href="/">
-              <Button variant="ghost" icon={ArrowLeft} className="text-[#145263] hover:text-[#0F3A47]">
-                Back to Home
-              </Button>
-            </Link>
+        <div className="max-w-md mx-auto px-6">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <h1 className="text-3xl font-bold text-slate-900 mb-2">
+              Sign In
+            </h1>
+            <p className="text-slate-600">
+              Welcome back! Please sign in to your account.
+            </p>
           </div>
 
-          <Card className="max-w-lg mx-auto">
-            <CardHeader className="pb-4">
-              <div className="text-center">
-                <h1 className="heading-3 text-slate-900 mb-2">
-                  {step === 'email' && 'Sign In to Your Account'}
-                  {step === 'success' && 'Welcome Back!'}
-                </h1>
-                <p className="body text-slate-600">
-                  {step === 'email' && 'Enter your credentials to access your dashboard'}
-                  {step === 'success' && 'You have successfully signed in'}
-                </p>
+          {/* Sign In Form */}
+          <div className="bg-white rounded-2xl shadow-lg p-8">
+            {errors.general && (
+              <div className="mb-6 p-4 bg-red-100 border border-red-400 text-red-700 rounded-lg">
+                {errors.general}
               </div>
-            </CardHeader>
-            <CardBody>
-              {error && (
-                <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg flex items-center gap-3">
-                  <AlertCircle className="w-5 h-5 text-red-600 flex-shrink-0" />
-                  <p className="text-red-800 text-sm">{error}</p>
-                </div>
-              )}
+            )}
 
-              {success && (
-                <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg flex items-center gap-3">
-                  <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0" />
-                  <p className="text-green-800 text-sm">{success}</p>
-                </div>
-              )}
+            <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">
+                  Email Address
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] ${
+                    errors.email ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Enter your email"
+                />
+                {errors.email && (
+                  <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+                )}
+              </div>
 
-              {renderStep()}
-            </CardBody>
-          </Card>
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={formData.password}
+                  onChange={handleInputChange}
+                  className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[#2A4049] focus:border-[#2A4049] ${
+                    errors.password ? 'border-red-500' : 'border-gray-300'
+                  }`}
+                  placeholder="Enter your password"
+                />
+                {errors.password && (
+                  <p className="mt-1 text-sm text-red-600">{errors.password}</p>
+                )}
+              </div>
+
+              <div className="flex items-center justify-between">
+                <div className="flex items-center">
+                  <input
+                    id="remember-me"
+                    name="remember-me"
+                    type="checkbox"
+                    className="h-4 w-4 text-[#2A4049] focus:ring-[#2A4049] border-gray-300 rounded"
+                  />
+                  <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
+                    Remember me
+                  </label>
+                </div>
+
+                <div className="text-sm">
+                  <Link
+                    href="/forgot-password"
+                    className="font-medium text-[#2A4049] hover:text-[#1F2F35]"
+                  >
+                    Forgot your password?
+                  </Link>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#2A4049] text-white py-3 px-4 rounded-lg font-semibold hover:bg-[#1F2F35] transition-colors duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {loading ? 'Signing In...' : 'Sign In'}
+              </button>
+            </form>
+
+            <div className="mt-6">
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-gray-300" />
+                </div>
+                <div className="relative flex justify-center text-sm">
+                  <span className="px-2 bg-white text-gray-500">New to eCureTrip?</span>
+                </div>
+              </div>
+
+              <div className="mt-6">
+                <Link
+                  href="/patient/register"
+                  className="w-full flex justify-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm bg-white text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200"
+                >
+                  Create Patient Account
+                </Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Additional Links */}
+          <div className="mt-8 text-center">
+            <p className="text-sm text-gray-600">
+              Are you a doctor?{' '}
+              <Link
+                href="/doctor/signin"
+                className="font-medium text-[#2A4049] hover:text-[#1F2F35]"
+              >
+                Doctor Sign In
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
 
